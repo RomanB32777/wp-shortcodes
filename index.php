@@ -4,7 +4,7 @@
 Plugin Name: Custom Mercury Shosrtcodes
 Plugin URI: https://test.com/
 Description: The plugin fot MercuryTheme with custom shortcodes
-Version: 1.0.10
+Version: 1.1.0
 Author: Test.com
 Author URI: https://test.com/
 License: GNU General Public License v3 or later
