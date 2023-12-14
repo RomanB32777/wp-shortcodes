@@ -1,0 +1,15 @@
+{
+	"extends": ["stylelint-config-standard", "stylelint-config-idiomatic-order"],
+	"plugins": ["stylelint-order"],
+	"rules": {
+		"property-no-vendor-prefix": null,
+		"selector-max-id": 1,
+		"font-family-name-quotes": "always-unless-keyword",
+		"value-no-vendor-prefix": null,
+		"value-keyword-case": null,
+		"no-descending-specificity": null,
+		"selector-class-pattern": null,
+		"max-nesting-depth": [2, { "ignore": ["pseudo-classes"] }],
+		"at-rule-no-unknown": null
+	}
+}

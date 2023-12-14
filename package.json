@@ -1,0 +1,29 @@
+{
+  "name": "wp-shortcodes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RomanB32777/wp-shortcodes.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RomanB32777/wp-shortcodes/issues"
+  },
+  "homepage": "https://github.com/RomanB32777/wp-shortcodes#readme",
+  "devDependencies": {
+    "@wordpress/eslint-plugin": "^17.4.0",
+    "@wordpress/prettier-config": "^3.4.0",
+    "eslint-config-prettier": "^9.1.0",
+    "stylelint": "^16.0.2",
+    "stylelint-config-idiomatic-order": "^10.0.0",
+    "stylelint-config-standard": "^35.0.0",
+    "stylelint-order": "^6.0.4"
+  }
+}
