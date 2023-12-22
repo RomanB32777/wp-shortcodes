@@ -15,35 +15,33 @@ Text Domain: custom-shortcodes
 
 global $base_dir;
 
-$base_dir = untrailingslashit(plugin_dir_path(__FILE__));
-$base_url = untrailingslashit(plugin_dir_url( __FILE__ ));
+$base_dir = untrailingslashit( plugin_dir_path( __FILE__ ) );
+$base_url = untrailingslashit( plugin_dir_url( __FILE__ ) );
 
-include_once $base_dir . '/functions/enqueue-assets.php';
+require_once $base_dir . '/functions/enqueue-assets.php';
 
-/*  Connecting style files for the plugin - Start  */
-
+/**  Connecting style files for the plugin - Start  **/
 function shortcode_stylesheets() {
-    enqueue_time_versioned_plugin_style('casinos-shortcode-custom-3-css', '/css/casinos-shortcode-custom-3.css');
-    enqueue_time_versioned_plugin_style('casinos-shortcode-custom-4-css', '/css/casinos-shortcode-custom-4.css');
-    enqueue_time_versioned_plugin_style('casinos-shortcode-custom-table-css', '/css/casinos-shortcode-custom-table.css');
+	enqueue_time_versioned_plugin_style( 'shortcode-custom-3-css', '/css/shortcode-custom-3.css' );
+	enqueue_time_versioned_plugin_style( 'shortcode-custom-4-css', '/css/shortcode-custom-4.css' );
+	enqueue_time_versioned_plugin_style( 'shortcode-custom-table-css', '/css/shortcode-custom-table.css' );
 }
 add_action( 'wp_enqueue_scripts', 'shortcode_stylesheets' );
 
-/*  Connecting style files for the plugin - End  */
+/**  Connecting style files for the plugin - End  **/
 
 
-/*  Connecting js files for the plugin - Start  */
-
+/**  Connecting js files for the plugin - Start  **/
 function shortcode_scripts() {
-    enqueue_time_versioned_plugin_js('casinos-shortcode-custom-4-js', '/js/casinos-shortcode-custom-4.js');
+	enqueue_time_versioned_plugin_js( 'casinos-shortcode-custom-4-js', '/js/casinos-shortcode-custom-4.js' );
 }
 add_action( 'wp_enqueue_scripts', 'shortcode_scripts' );
 
-/*  Connecting js files for the plugin - End  */
+/**  Connecting js files for the plugin - End  */
 
 
-include_once $base_dir . '/shortcodes/casinos-shortcode-custom-3.php';
-include_once $base_dir . '/shortcodes/casinos-shortcode-custom-4.php';
-include_once $base_dir . '/shortcodes/casinos-shortcode-custom-table.php';
+require_once $base_dir . '/shortcodes/casinos-shortcode-custom-3.php';
+require_once $base_dir . '/shortcodes/casinos-shortcode-custom-4.php';
+require_once $base_dir . '/shortcodes/casinos-shortcode-custom-table.php';
 
-include_once $base_dir . '/functions/wp-ajax-actions.php';
+require_once $base_dir . '/functions/wp-ajax-actions.php';

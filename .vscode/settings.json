@@ -8,6 +8,9 @@
 	"[javascript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
+	"[php]": {
+		"editor.defaultFormatter": "valeryanm.vscode-phpsab"
+	},
 	"stylelint.validate": ["css", "scss", "postcss"],
 	"emmet.triggerExpansionOnTab": true,
 	"emmet.includeLanguages": {

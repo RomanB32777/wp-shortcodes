@@ -1,0 +1,54 @@
+.space-shortcode-custom-3 {
+	.space-companies-sidebar-item {
+		padding-bottom: 0;
+		border: 1px solid var(--border-color);
+		margin: 10px 0;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		&-ins-wrap {
+			padding: 28px;
+			transition: all 0.5s ease-in-out;
+		}
+
+		&-title,
+		&-button {
+			margin-left: 85px;
+		}
+
+		&-img {
+			width: 75px;
+		}
+	}
+}
+
+@media screen and (width <= 767px) {
+	.space-shortcode-custom-3 {
+		width: auto;
+		margin: 0 8px !important;
+
+		.space-companies-sidebar-item {
+			margin: 0;
+
+			&-ins-wrap {
+				padding: 16px;
+			}
+
+			&-img {
+				width: 110px;
+			}
+
+			&-title,
+			&-button {
+				margin-left: 125px;
+			}
+		}
+
+		.space-organizations-3-archive-item-rating {
+			top: 100% !important;
+			left: 20% !important;
+		}
+	}
+}

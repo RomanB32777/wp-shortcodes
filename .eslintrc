@@ -4,6 +4,7 @@
 		"prettier"
 	],
 	"rules": {
+		"@wordpress/no-global-event-listener": "off",
 		"no-shadow": [2, { "allow": ["done"] }]
 	},
 	"parserOptions": {
