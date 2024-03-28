@@ -1,0 +1,29 @@
+@font-face {
+	font-family: "LINESeedJP";
+	font-style: normal;
+	font-weight: 100;
+	src: url("@/assets/fonts/LINESeedJP_OTF_Th.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "LINESeedJP";
+	font-style: normal;
+	font-weight: 400;
+	src: url("@/assets/fonts/LINESeedJP_OTF_Rg.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "LINESeedJP";
+	font-style: normal;
+	font-weight: 700;
+	src: url("@/assets/fonts/LINESeedJP_OTF_Bd.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "LINESeedJP";
+	font-style: normal;
+	font-weight: 800;
+	src: url("@/assets/fonts/LINESeedJP_OTF_Eb.woff2") format("woff2");
+}
+
+$font-family-primary: "LINESeedJP", "Arial", sans-serif;

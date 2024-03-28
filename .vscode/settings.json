@@ -15,5 +15,6 @@
 	"emmet.triggerExpansionOnTab": true,
 	"emmet.includeLanguages": {
 		"javascript": "javascriptreact"
-	}
+	},
+	"phpcs.executablePath": "./vendor/squizlabs/php_codesniffer/bin/phpcs"
 }
