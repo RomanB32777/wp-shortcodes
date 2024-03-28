@@ -1,9 +1,30 @@
 {
 	"trailingComma": "es5",
-	"printWidth": 80,
+	"printWidth": 100,
 	"semi": true,
 	"useTabs": true,
 	"tabWidth": 2,
 	"singleQuote": false,
-	"plugins": ["@wordpress/prettier-config"]
+	"plugins": ["@wordpress/prettier-config", "@ianvs/prettier-plugin-sort-imports"],
+	"importOrder": [
+		"<BUILTIN_MODULES>",
+
+		"",
+
+		"<THIRD_PARTY_MODULES>",
+
+		"",
+
+		"^@/(.*)$",
+
+		"",
+
+		"^../(.*)$",
+		"^./(.*)[^(.scss)]$",
+		"^[.]",
+
+		"",
+
+		"(.scss)$"
+	]
 }
