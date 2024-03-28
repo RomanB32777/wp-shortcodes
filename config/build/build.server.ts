@@ -1,5 +1,3 @@
-import path from "path";
-
 import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
 
 import type { IBuildOptions } from "./types";
@@ -21,11 +19,7 @@ export function buildDevServer({ port, paths }: IBuildOptions): DevServerConfigu
 		port: port || 5050,
 		allowedHosts: "all",
 		watchFiles: {
-			paths: [
-				paths.src,
-				path.resolve(__dirname, "theme-functions"),
-				path.resolve(__dirname, "theme-parts"),
-			],
+			paths: [paths.src],
 		},
 	};
 }
