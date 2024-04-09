@@ -1,41 +1,63 @@
 <?php
 
-function render_shortcode_organization_cards(
-	$query,
-	$columns = 1,
-	$is_enable_slider = '1',
-	$card_style = 'thin'
-) {
+function render_shortcode_organization_cards( $query, $attributes = array() ) {
+	$defaults = array(
+		'columns'             => 1,
+		'is_enable_slider'    => '1',
+		'current_page'        => 1,
+		'first_border_color'  => '#a7e79c',
+		'second_border_color' => '#e5e79c',
+		'third_border_color'  => '#e7c09c',
+	);
+
+	$parsed_args = wp_parse_args( $attributes, $defaults );
+
+	$columns             = $parsed_args['columns'];
+	$is_enable_slider    = $parsed_args['is_enable_slider'];
+	$current_page        = $parsed_args['current_page'];
+	$first_border_color  = $parsed_args['first_border_color'];
+	$second_border_color = $parsed_args['second_border_color'];
+	$third_border_color  = $parsed_args['third_border_color'];
+
 	while ( $query->have_posts() ) :
 		$query->the_post();
 
-		$item_classes = 'w-1/4';
+		$current_post_index = $query->current_post;
+		$item_classes       = array();
 
 		if ( 1 === $columns ) {
-			$item_classes = 'w-full';
+			array_push( $item_classes, 'w-full' );
 		} elseif ( 2 === $columns ) {
-			$item_classes = 'w-[calc(100%/2-1.25rem)]';
+			array_push( $item_classes, 'w-[calc(100%/2-1.25rem)]' );
 		} elseif ( 3 === $columns ) {
-			$item_classes = 'w-[calc(100%/3-1.25rem)]';
+			array_push( $item_classes, 'w-[calc(100%/3-1.25rem)]' );
+		} else {
+			array_push( $item_classes, 'w-1/4' );
 		}
 
 		if ( boolval( $is_enable_slider ) ) {
-			$item_classes .= ' swiper-slide !h-auto';
+			array_push( $item_classes, 'swiper-slide !h-auto' );
+		}
+
+		$item_classnames   = implode( ' ', $item_classes );
+		$item_border_color = 'transparent';
+
+		if ( 0 === $current_post_index && 1 === $current_page ) {
+			$item_border_color = $first_border_color;
+		} elseif ( 1 === $current_post_index && 1 === $current_page ) {
+			$item_border_color = $second_border_color;
+		} elseif ( 2 === $current_post_index && 1 === $current_page ) {
+			$item_border_color = $third_border_color;
 		}
 
 		?>
 
-		<div class="organization-item duration-200 <?php echo esc_attr( $item_classes ); ?>">
+		<div
+			class="organization-item duration-200 border-4 bg-white rounded-xl md:!rounded-3xl <?php echo esc_attr( $item_classnames ); ?>"
+			style="border-color: <?php echo esc_attr( $item_border_color ); ?>;"
+		>
 
-			<?php
-			if ( 'thin' === $card_style ) {
-				include plugin_dir_path( __FILE__ ) . 'parts/single/style-thin.php';
-			} elseif ( 'wide' === $card_style ) {
-				include plugin_dir_path( __FILE__ ) . 'parts/single/style-wide.php';
-			} elseif ( 'compact' === $card_style ) {
-				include plugin_dir_path( __FILE__ ) . 'parts/single/style-compact.php';
-			}
-			?>
+			<?php include plugin_dir_path( __FILE__ ) . 'parts/single/style-wide.php'; ?>
 
 		</div>
 
@@ -57,7 +79,6 @@ function organizations_shortcode_custom( $atts ) {
 			'extract_id'                    => '',
 			'pick_id'                       => '',
 			'columns'                       => 1,
-			'card_style'                    => 'thin',
 			'order'                         => '',
 			'order_by'                      => '',
 			'title'                         => '',
@@ -72,6 +93,9 @@ function organizations_shortcode_custom( $atts ) {
 			'slider_mobile_space_between'   => 24,
 			'slider_tablet_space_between'   => 24,
 			'slider_laptop_space_between'   => 24,
+			'first_border_color'            => '#a7e79c',
+			'second_border_color'           => '#e5e79c',
+			'third_border_color'            => '#e7c09c',
 		),
 		$atts,
 	);
@@ -81,12 +105,11 @@ function organizations_shortcode_custom( $atts ) {
 	$exclude_id                    = $attributes['exclude_id'];
 	$extract_id                    = $attributes['extract_id'];
 	$columns                       = intval( $attributes['columns'] );
-	$card_style                    = $attributes['card_style'];
 	$order                         = $attributes['order'];
 	$order_by                      = $attributes['order_by'];
 	$title                         = $attributes['title'];
 	$is_with_pagination            = $attributes['is_with_pagination'];
-	$is_enable_slider              = $attributes['is_enable_slider'];
+	$is_enable_slider              = boolval( $attributes['is_enable_slider'] );
 	$is_loop_slider                = $attributes['is_loop_slider'];
 	$is_disable_autoplay           = $attributes['is_disable_autoplay'];
 	$slider_autoplay_delay         = intval( $attributes['slider_autoplay_delay'] );
@@ -96,9 +119,16 @@ function organizations_shortcode_custom( $atts ) {
 	$slider_mobile_space_between   = intval( $attributes['slider_mobile_space_between'] );
 	$slider_tablet_space_between   = intval( $attributes['slider_tablet_space_between'] );
 	$slider_laptop_space_between   = intval( $attributes['slider_laptop_space_between'] );
+	$first_border_color            = $attributes['first_border_color'];
+	$second_border_color           = $attributes['second_border_color'];
+	$third_border_color            = $attributes['third_border_color'];
 
 	if ( 'rating' === $order_by ) {
 		$order_by = 'meta_value_num';
+	}
+
+	if ( $items_number < 3 ) {
+		$items_number = 3;
 	}
 
 	$exclude_id_array = '';
@@ -129,16 +159,27 @@ function organizations_shortcode_custom( $atts ) {
 	if ( $organizations_query->have_posts() ) {
 		?>
 
-		<div class="shortcode-organizations-wrapper relative" id="shortcode-organizations-<?php echo esc_attr( $block_id ); ?>">
+		<div class="shortcode-organizations-wrapper relative font-inter" id="shortcode-organizations-<?php echo esc_attr( $block_id ); ?>">
 			<?php if ( $title ) { ?>
-				<h5 class="block-title font-lineSeedJp mb-6 md:text-2xl">
+				<h5 class="block-title mb-6 md:text-2xl">
 					<span><?php echo esc_html( $title ); ?></span>
 				</h5>
 			<?php } ?>
 
-			<div class="overflow-hidden pb-14">
+			<?php
+
+			$shortcode_wrap_classes = array(
+				'overflow-hidden',
+				$is_enable_slider ? 'pb-14' : '',
+			);
+
+			$shortcode_wrap_classes_names = esc_attr( implode( ' ', $shortcode_wrap_classes ) );
+
+			?>
+
+			<div class="<?php echo esc_attr( $shortcode_wrap_classes_names ); ?>">
 				<div
-					<?php if ( boolval( $is_enable_slider ) ) { ?>
+					<?php if ( $is_enable_slider ) { ?>
 						class='swiper-shortcode-slider'
 						id='swiper-shortcode-<?php echo esc_attr( $block_id ); ?>'
 						data-slider-loop="<?php echo esc_attr( boolval( $is_loop_slider ) ? 'true' : 'false' ); ?>"
@@ -154,59 +195,66 @@ function organizations_shortcode_custom( $atts ) {
 				>
 					<?php
 
-					$wrap_classes       = array(
+					$is_visible_more_btn = boolval( $is_with_pagination ) && $organizations_query->post_count >= $items_number;
+
+					$cards_wrap_classes = array(
 						'shortcode-cards',
-						boolval( $is_enable_slider ) ? 'swiper-wrapper lg:!flex lg:!gap-5 lg:flex-wrap' : 'flex gap-5 flex-wrap',
+						$is_enable_slider ? 'swiper-wrapper lg:!flex lg:!gap-5 lg:flex-wrap' : 'flex gap-5 flex-wrap',
+						$is_visible_more_btn ? 'mb-6 md:!mb-11' : '',
 					);
-					$wrap_classes_names = esc_attr( implode( ' ', $wrap_classes ) );
+
+					$cards_wrap_classes_names = esc_attr( implode( ' ', $cards_wrap_classes ) );
 
 					?>
 
-					<div class="<?php echo esc_attr( $wrap_classes_names ); ?>">
+					<div class="<?php echo esc_attr( $cards_wrap_classes_names ); ?>">
 
 						<?php
 						render_shortcode_organization_cards(
 							$organizations_query,
-							$columns,
-							$is_enable_slider,
-							$card_style
+							array(
+								'columns'             => $columns,
+								'is_enable_slider'    => $is_enable_slider,
+								'first_border_color'  => $first_border_color,
+								'second_border_color' => $second_border_color,
+								'third_border_color'  => $third_border_color,
+							)
 						);
 						?>
 
 					</div>
 
-					<?php if ( boolval( $is_enable_slider ) ) { ?>
+					<?php if ( $is_enable_slider ) { ?>
+
 						<div class="swiper-pagination [&>*]:mr-3 [&>*:last-child]:mr-0 lg:hidden"></div>
-					<?php } ?>
 
-					<?php if ( boolval( $is_with_pagination ) && $organizations_query->post_count >= $items_number ) { ?>
+					<?php } elseif ( $is_visible_more_btn ) { ?>
 
-						<?php
+						<div class="flex justify-center">
+							<?php
 
-							$more_text = __( 'Show more', 'custom-shortcodes-plugin' );
-							$less_text = __( 'Show less', 'custom-shortcodes-plugin' );
+								$more_text = __( 'Show more', 'custom-shortcodes-plugin' );
+								$less_text = __( 'Show less', 'custom-shortcodes-plugin' );
 
-						?>
-						<div class="more-btn font-lineSeedJp my-7 text-primary text-base text-center">
-							<span>
-								<?php echo esc_html( $more_text ); ?>
-							</span>
-							<img
-								src="<?php echo esc_url( plugins_url( '/src/assets/icons/arrow.svg', __FILE__ ) ); ?>"
-								class="load-more mx-auto cursor-pointer duration-200"
+							?>
+							<button
+								class="more-btn w-80 py-5 bg-grizzly-light text-dark font-bold text-xl rounded-xl"
 								data-items-number="<?php echo esc_attr( $items_number ); ?>"
 								data-columns-number="<?php echo esc_attr( $columns ); ?>"
 								data-order-by="<?php echo esc_attr( $order_by ); ?>"
 								data-order="<?php echo esc_attr( $order ); ?>"
 								data-exclude-id="<?php echo esc_attr( $exclude_id ); ?>"
 								data-enable-slider="<?php echo esc_attr( $is_enable_slider ); ?>"
-								data-card-style="<?php echo esc_attr( $card_style ); ?>"
 								data-block-id="<?php echo esc_attr( $block_id ); ?>"
 								data-more-text="<?php echo esc_attr( $more_text ); ?>"
 								data-less-text="<?php echo esc_attr( $less_text ); ?>"
-								alt='<?php echo esc_attr( $more_text ); ?>'
-							/>
+							>
+								<span>
+									<?php echo esc_html( $more_text ); ?>
+								</span>
+							</button>
 						</div>
+
 					<?php } ?>
 				</div>
 			</div>

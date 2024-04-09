@@ -8,7 +8,6 @@ function ajax_load_more_organizations() {
 	$exclude_id_array = '';
 	$columns_number   = 1;
 	$is_enable_slider = '1';
-	$card_style       = 'thin';
 
 	$query_params = wp_unslash( $_POST );
 
@@ -33,9 +32,6 @@ function ajax_load_more_organizations() {
 	if ( isset( $query_params['isEnableSlider'] ) ) {
 		$is_enable_slider = filter_var( $query_params['isEnableSlider'], FILTER_VALIDATE_BOOLEAN );
 	}
-	if ( isset( $query_params['cardStyle'] ) && is_string( $query_params['cardStyle'] ) ) {
-		$card_style = trim( $query_params['cardStyle'] );
-	}
 
 	$args = array(
 		'posts_per_page' => $items_number,
@@ -54,9 +50,11 @@ function ajax_load_more_organizations() {
 
 	render_shortcode_organization_cards(
 		$query,
-		$columns_number,
-		$is_enable_slider,
-		$card_style
+		array(
+			'columns'          => $columns_number,
+			'is_enable_slider' => $is_enable_slider,
+			'current_page'     => $paged,
+		)
 	);
 
 	if ( intval( $paged ) === intval( $query->max_num_pages ) ) { ?>

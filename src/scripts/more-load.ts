@@ -7,7 +7,7 @@ jQuery(document).ready(function ($) {
 		return $("#is-all-pages").length;
 	};
 
-	const moreButton = $(".load-more");
+	const moreButton = $(".more-btn");
 
 	const handleButtonActiveStatus = () => {
 		moreButton.toggleClass("opacity-75");
@@ -23,7 +23,6 @@ jQuery(document).ready(function ($) {
 			order = $(this).attr("data-order"),
 			columnsNumber = $(this).attr("data-columns-number"),
 			isEnableSlider = $(this).attr("data-enable-slider"),
-			cardStyle = $(this).attr("data-card-style"),
 			excludeId = $(this).attr("data-exclude-id"),
 			moreText = $(this).attr("data-more-text"),
 			lessText = $(this).attr("data-less-text"),
@@ -34,12 +33,9 @@ jQuery(document).ready(function ($) {
 		}
 
 		const cardList = wrapperBlock.find(".shortcode-cards"),
-			btnWrapper = wrapperBlock.find(".more-btn"),
-			label = btnWrapper.find("span");
+			label = moreButton.find("span");
 
 		if (isLastPage()) {
-			$(this).attr("alt", moreText);
-			$(this).toggleClass("rotate-180");
 			label.text(moreText);
 
 			cardList.empty();
@@ -67,7 +63,6 @@ jQuery(document).ready(function ($) {
 				excludeId,
 				columnsNumber,
 				isEnableSlider,
-				cardStyle,
 				paged: ++paged,
 			},
 			beforeSend() {
@@ -77,8 +72,6 @@ jQuery(document).ready(function ($) {
 				cardList?.append(res);
 
 				if (isLastPage()) {
-					moreButton.toggleClass("rotate-180");
-					moreButton.attr("alt", lessText);
 					label.text(lessText);
 				}
 			},
