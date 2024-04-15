@@ -136,7 +136,6 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 										custom_star_rating(
 											array(
 												'rating' => $overall_rating,
-												'stars_number' => $rating_stars_number_value,
 												'wrapper_classes' => 'justify-center flex-wrap gap-x-1',
 												'star_classes' => 'w-5 h-5',
 											)
