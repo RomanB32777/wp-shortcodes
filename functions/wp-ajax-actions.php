@@ -54,9 +54,11 @@ function ajax_load_more_organizations() {
 
 	render_shortcode_organization_cards(
 		$query,
-		$columns_number,
-		$is_enable_slider,
-		$card_style
+		array(
+			'columns'          => $columns_number,
+			'is_enable_slider' => $is_enable_slider,
+			'card_style'       => $card_style,
+		)
 	);
 
 	if ( intval( $paged ) === intval( $query->max_num_pages ) ) { ?>

@@ -1,31 +1,44 @@
 <?php
 
-function render_shortcode_organization_cards(
-	$query,
-	$columns = 1,
-	$is_enable_slider = '1',
-	$card_style = 'thin'
-) {
+function render_shortcode_organization_cards( $query, $attributes = array() ) {
+
+	$defaults = array(
+		'columns'          => 1,
+		'is_enable_slider' => '1',
+		'card_style'       => 'thin',
+	);
+
+	$parsed_args = wp_parse_args( $attributes, $defaults );
+
+	$columns          = $parsed_args['columns'];
+	$is_enable_slider = $parsed_args['is_enable_slider'];
+	$card_style       = $parsed_args['card_style'];
+
 	while ( $query->have_posts() ) :
 		$query->the_post();
 
-		$item_classes = 'w-1/4';
+		$current_post_index = $query->current_post;
+		$item_classes       = array();
 
 		if ( 1 === $columns ) {
-			$item_classes = 'w-full';
+			$item_classes[] = 'w-full';
 		} elseif ( 2 === $columns ) {
-			$item_classes = 'w-[calc(100%/2-1.25rem)]';
+			$item_classes[] = 'w-[calc(100%/2-1.25rem)]';
 		} elseif ( 3 === $columns ) {
-			$item_classes = 'w-[calc(100%/3-1.25rem)]';
+			$item_classes[] = 'w-[calc(100%/3-1.25rem)]';
+		} else {
+			$item_classes[] = 'w-1/4';
 		}
 
 		if ( boolval( $is_enable_slider ) ) {
-			$item_classes .= ' swiper-slide !h-auto';
+			$item_classes[] = 'swiper-slide !h-auto';
 		}
+
+		$item_classnames = implode( ' ', $item_classes );
 
 		?>
 
-		<div class="organization-item duration-200 <?php echo esc_attr( $item_classes ); ?>">
+		<div class="organization-item duration-200 <?php echo esc_attr( $item_classnames ); ?>">
 
 			<?php
 			if ( 'thin' === $card_style ) {
@@ -40,9 +53,8 @@ function render_shortcode_organization_cards(
 		</div>
 
 		<?php
-
-	endwhile;
-	wp_reset_postdata();
+		endwhile;
+		wp_reset_postdata();
 }
 
 add_shortcode( 'organizations-shortcode-custom', 'organizations_shortcode_custom' );
@@ -86,7 +98,7 @@ function organizations_shortcode_custom( $atts ) {
 	$order_by                      = $attributes['order_by'];
 	$title                         = $attributes['title'];
 	$is_with_pagination            = $attributes['is_with_pagination'];
-	$is_enable_slider              = $attributes['is_enable_slider'];
+	$is_enable_slider              = boolval( $attributes['is_enable_slider'] );
 	$is_loop_slider                = $attributes['is_loop_slider'];
 	$is_disable_autoplay           = $attributes['is_disable_autoplay'];
 	$slider_autoplay_delay         = intval( $attributes['slider_autoplay_delay'] );
@@ -129,16 +141,27 @@ function organizations_shortcode_custom( $atts ) {
 	if ( $organizations_query->have_posts() ) {
 		?>
 
-		<div class="shortcode-organizations-wrapper relative" id="shortcode-organizations-<?php echo esc_attr( $block_id ); ?>">
-			<?php if ( $title ) { ?>
-				<h5 class="block-title font-lineSeedJp mb-6 md:text-2xl">
+		<div class="shortcode-organizations-wrapper relative font-lineSeedJp" id="shortcode-organizations-<?php echo esc_attr( $block_id ); ?>">
+				<?php if ( $title ) { ?>
+				<h5 class="block-title mb-6 md:text-2xl">
 					<span><?php echo esc_html( $title ); ?></span>
 				</h5>
 			<?php } ?>
 
-			<div class="overflow-hidden pb-14">
+			<?php
+
+			$shortcode_wrap_classes = array(
+				'overflow-hidden',
+				$is_enable_slider ? 'pb-14' : '',
+			);
+
+			$shortcode_wrap_classes_names = esc_attr( implode( ' ', $shortcode_wrap_classes ) );
+
+			?>
+
+			<div class="<?php echo esc_attr( $shortcode_wrap_classes_names ); ?>">
 				<div
-					<?php if ( boolval( $is_enable_slider ) ) { ?>
+					<?php if ( $is_enable_slider ) { ?>
 						class='swiper-shortcode-slider'
 						id='swiper-shortcode-<?php echo esc_attr( $block_id ); ?>'
 						data-slider-loop="<?php echo esc_attr( boolval( $is_loop_slider ) ? 'true' : 'false' ); ?>"
@@ -153,41 +176,45 @@ function organizations_shortcode_custom( $atts ) {
 					<?php } ?>
 				>
 					<?php
+					$is_visible_more_btn = boolval( $is_with_pagination ) && $organizations_query->post_count >= $items_number;
 
-					$wrap_classes       = array(
+					$cards_wrap_classes = array(
 						'shortcode-cards',
-						boolval( $is_enable_slider ) ? 'swiper-wrapper lg:!flex lg:!gap-5 lg:flex-wrap' : 'flex gap-5 flex-wrap',
+						$is_enable_slider ? 'swiper-wrapper lg:!flex lg:!gap-5 lg:flex-wrap' : 'flex gap-5 flex-wrap',
+						$is_visible_more_btn ? 'mb-6 md:!mb-11' : '',
 					);
-					$wrap_classes_names = esc_attr( implode( ' ', $wrap_classes ) );
+
+					$cards_wrap_classes_names = esc_attr( implode( ' ', $cards_wrap_classes ) );
 
 					?>
 
-					<div class="<?php echo esc_attr( $wrap_classes_names ); ?>">
+					<div class="<?php echo esc_attr( $cards_wrap_classes_names ); ?>">
 
 						<?php
-						render_shortcode_organization_cards(
-							$organizations_query,
-							$columns,
-							$is_enable_slider,
-							$card_style
-						);
+							render_shortcode_organization_cards(
+								$organizations_query,
+								array(
+									'columns'          => $columns,
+									'is_enable_slider' => $is_enable_slider,
+									'card_style'       => $card_style,
+								)
+							);
 						?>
 
 					</div>
 
-					<?php if ( boolval( $is_enable_slider ) ) { ?>
+					<?php if ( $is_enable_slider ) { ?>
 						<div class="swiper-pagination [&>*]:mr-3 [&>*:last-child]:mr-0 lg:hidden"></div>
-					<?php } ?>
-
-					<?php if ( boolval( $is_with_pagination ) && $organizations_query->post_count >= $items_number ) { ?>
+					<?php } elseif ( $is_visible_more_btn ) { ?>
 
 						<?php
 
-							$more_text = __( 'Show more', 'custom-shortcodes-plugin' );
-							$less_text = __( 'Show less', 'custom-shortcodes-plugin' );
+						$more_text = __( 'Show more', 'custom-shortcodes-plugin' );
+						$less_text = __( 'Show less', 'custom-shortcodes-plugin' );
 
 						?>
-						<div class="more-btn font-lineSeedJp my-7 text-primary text-base text-center">
+
+						<div class="more-btn my-7 text-primary text-base text-center">
 							<span>
 								<?php echo esc_html( $more_text ); ?>
 							</span>
@@ -212,10 +239,10 @@ function organizations_shortcode_custom( $atts ) {
 			</div>
 		</div>
 
-		<?php
-		$items = ob_get_clean();
-		return $items;
+				<?php
+				$items = ob_get_clean();
+				return $items;
 	}
 }
 
-add_action( 'init', 'organizations_shortcode_custom' );
+		add_action( 'init', 'organizations_shortcode_custom' );

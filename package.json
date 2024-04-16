@@ -37,7 +37,7 @@
 		]
 	},
 	"validate-branch-name": {
-		"pattern": "^(master|main|develop|production){1}$|^(feature|fix|hotfix|release)/.+$"
+		"pattern": "^(master|main|develop|production){1}$|^(feature|fix|hotfix|release|project)/.+$"
 	},
 	"config": {
 		"commitizen": {

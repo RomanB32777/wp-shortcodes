@@ -21,6 +21,8 @@ const {
 	GRIZZLY_DARK_COLOR,
 } = process.env;
 
+const alternativeFonts = ["Arial", "sans-serif"];
+
 module.exports = {
 	content: ["./src/**/*.{php,js,ts,tsx}", "./parts/**/*.{php,js,ts,tsx}", "./*.php"],
 	theme: {
@@ -54,7 +56,10 @@ module.exports = {
 				},
 			},
 			fontFamily: {
-				notoSans: ['"NotoSans"', "Arial", "sans-serif"],
+				roboto: ['"Roboto"', ...alternativeFonts],
+				notoSans: ['"NotoSans"', ...alternativeFonts],
+				lineSeedJp: ['"LINESeedJP"', ...alternativeFonts],
+				inter: ['"Inter"', ...alternativeFonts],
 			},
 			letterSpacing: {
 				wide: "0.75rem",

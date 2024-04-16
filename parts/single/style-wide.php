@@ -20,19 +20,18 @@ $allowed_html           = array(
 	),
 	'p'      => array(),
 );
-$short_desc             = get_post_meta( get_the_ID(), 'organization_short_desc', true );
 $external_link          = esc_url( get_post_meta( get_the_ID(), 'organization_external_link', true ) );
 $button_title           = esc_html( get_post_meta( get_the_ID(), 'organization_button_title', true ) );
 $overall_rating         = esc_html( get_post_meta( get_the_ID(), 'organization_overall_rating', true ) );
 $permalink_button_title = esc_html( get_post_meta( get_the_ID(), 'organization_permalink_button_title', true ) );
+$bonus_title            = get_post_meta( get_the_ID(), 'organization_bonus_title', true );
 $post_thumbnail_url     = get_the_post_thumbnail_url();
 $mobile_image_id        = esc_html( get_post_meta( get_the_ID(), 'organization_mobile_image', true ) );
+$mobile_image_width     = 300;
+$mobile_image_height    = 200;
 $src_mobile_image       = wp_get_attachment_image_src(
 	$mobile_image_id,
-	array(
-		300,
-		200,
-	)
+	array( $mobile_image_width, $mobile_image_height )
 );
 
 if ( empty( $button_title ) ) {
@@ -105,19 +104,18 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 									custom_star_rating(
 										array(
 											'rating'       => $overall_rating,
-											'stars_number' => $rating_stars_number_value,
 											'wrapper_classes' => 'justify-center flex-wrap gap-x-1',
 											'star_classes' => 'w-5 h-5',
 										)
 									);
 								?>
-								<span class="font-lineSeedJp text-base">
+								<span class="text-base">
 									<?php echo esc_html( number_format( round( $overall_rating, 1 ), 1, '.', ',' ) ); ?>
 								</span>
 							</div>
 						<?php } ?>
 
-						<p class="font-lineSeedJp text-base">
+						<p class="text-base">
 							<?php echo esc_html( $permalink_button_title ); ?>
 						</p>
 					</div>
@@ -131,15 +129,15 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 				<a
 					href="<?php the_permalink(); ?>"
 					title="<?php the_title_attribute(); ?>"
-					class="shortcode-link font-lineSeedJp text-xl font-bold no-underline duration-200 hover:text-secondary"
+					class="shortcode-link text-xl font-bold no-underline duration-200 hover:text-secondary"
 				>
 					<?php get_the_title() ? the_title() : the_ID(); ?>
 				</a>
 			</div>
 
-			<?php if ( $short_desc ) { ?>
-				<div class="font-lineSeedJp text-base mt-3 md:!mt-10">
-					<?php echo wp_kses( $short_desc, $allowed_html ); ?>
+			<?php if ( $bonus_title ) { ?>
+				<div class="text-base mt-3 md:!mt-10">
+					<?php echo wp_kses( $bonus_title, $allowed_html ); ?>
 				</div>
 			<?php } ?>
 		</div>
@@ -148,7 +146,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 			<a
 				href="<?php echo esc_url( $external_link_url ); ?>"
 				title="<?php echo esc_attr( $button_title ); ?>"
-				class="main-button shortcode-link font-lineSeedJp text-xs font-bold text-center py-3 px-4"
+				class="main-button shortcode-link text-xs font-bold text-center py-3 px-4"
 
 				<?php if ( $external_link ) { ?>
 					target="_blank" rel="nofollow"
@@ -161,7 +159,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 			<a
 				href="<?php the_permalink(); ?>"
 				title="<?php echo esc_attr( $permalink_button_title ); ?>"
-				class="shortcode-link font-lineSeedJp border main-border border-primary text-xs text-dark font-bold text-center py-3 px-4"
+				class="shortcode-link border main-border border-primary text-xs text-dark font-bold text-center py-3 px-4"
 			>
 				<span>
 					<?php echo esc_html( $permalink_button_title ); ?>
