@@ -28,8 +28,26 @@ $permalink_button_title = esc_html( get_post_meta( get_the_ID(), 'organization_p
 $bonus_title            = get_post_meta( get_the_ID(), 'organization_bonus_title', true );
 $post_thumbnail_url     = get_the_post_thumbnail_url();
 $mobile_image_id        = esc_html( get_post_meta( get_the_ID(), 'organization_mobile_image', true ) );
-$devices                = wp_get_post_terms( get_the_ID(), 'device' );
-$payment_methods        = wp_get_post_terms( get_the_ID(), 'payment-method' );
+$apps                   = get_posts(
+	array(
+		'post_type'      => 'app',
+		'posts_per_page' => -1,
+		'orderby'        => 'post_title',
+		'order'          => 'ASC',
+		'post_parent'    => get_the_ID(),
+
+	)
+);
+$payment_methods = get_posts(
+	array(
+		'post_type'      => 'payment',
+		'posts_per_page' => -1,
+		'orderby'        => 'post_title',
+		'order'          => 'ASC',
+		'post_parent'    => get_the_ID(),
+
+	)
+);
 
 $mobile_image_size = 44;
 $src_mobile_image  = wp_get_attachment_image_src(
@@ -151,39 +169,47 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 					</div>
 
 					<div class="flex items-center gap-4">
-						<?php if ( count( $devices ) ) { ?>
+						<?php if ( count( $apps ) ) { ?>
 							<div class="flex items-center gap-3 p-2 bg-white-light rounded-2xl">
 								<?php
-								$device_image_size = 16;
+								$app_platform_image_size = 16;
 
-								foreach ( $devices as $device ) {
+								$all_app_platforms = array();
 
-									$device_image_id = get_term_meta( $device->term_id, 'taxonomy-image-id', true );
+								foreach ( $apps as $app ) {
 
-									if ( empty( $device_image_id ) ) {
-										continue;
+									$app_platforms = wp_get_post_terms( $app->ID, 'app-platform' );
+
+									foreach ( $app_platforms as $app_platform ) {
+										$app_platform_image_id = get_term_meta( $app_platform->term_id, 'taxonomy-image-id', true );
+
+										if ( empty( $app_platform_image_id ) ) {
+											continue;
+										}
+
+										$src_app_platform_image = wp_get_attachment_image_src(
+											$app_platform_image_id,
+											array(
+												$app_platform_image_size,
+												$app_platform_image_size,
+											)
+										);
+
+										$all_app_platforms[ $src_app_platform_image[0] ] = $app_platform->name;
 									}
+								}
 
-									$src_device_image = wp_get_attachment_image_src(
-										$device_image_id,
-										array(
-											$device_image_size,
-											$device_image_size,
-										)
-									);
-
+								foreach ( $all_app_platforms as $image_src => $app_platform_name ) {
 									?>
-
 									<div class="flex justify-center overflow-hidden h-5 w-5">
-										<img
-											class="w-auto h-full object-cover object-center"
-											src="<?php echo esc_url( $src_device_image[0] ); ?>"
-											alt="<?php echo esc_attr( $device->name ); ?>"
-											width="<?php echo esc_attr( $device_image_size ); ?>"
-											height="<?php echo esc_attr( $device_image_size ); ?>"
-										>
-									</div>
-
+											<img
+												class="w-auto h-full object-cover object-center"
+												src="<?php echo esc_url( $image_src ); ?>"
+												alt="<?php echo esc_attr( $app_platform_name ); ?>"
+												width="<?php echo esc_attr( $app_platform_image_size ); ?>"
+												height="<?php echo esc_attr( $app_platform_image_size ); ?>"
+											>
+										</div>
 								<?php } ?>
 							</div>
 						<?php } ?>
@@ -191,38 +217,45 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 						<?php if ( count( $payment_methods ) ) { ?>
 							<div class="flex items-center gap-3">
 								<?php
-								$payment_method_image_width  = 25;
-								$payment_method_image_height = 16;
+								$payment_system_image_width  = 25;
+								$payment_system_image_height = 16;
 
+								$all_payment_systems = array();
 
 								foreach ( $payment_methods as $payment_method ) {
 
-									$payment_method_image_id = get_term_meta( $payment_method->term_id, 'taxonomy-image-id', true );
+									$payment_systems = wp_get_post_terms( $payment_method->ID, 'payment-system' );
 
-									if ( empty( $payment_method_image_id ) ) {
-										continue;
+									foreach ( $payment_systems as $payment_system ) {
+										$payment_system_image_id = get_term_meta( $payment_system->term_id, 'taxonomy-image-id', true );
+
+										if ( empty( $payment_system_image_id ) ) {
+											continue;
+										}
+
+										$src_payment_system_image = wp_get_attachment_image_src(
+											$payment_system_image_id,
+											array(
+												$payment_system_image_width,
+												$payment_system_image_height,
+											)
+										);
+
+										$all_payment_systems[ $src_payment_system_image[0] ] = $payment_system->name;
 									}
+								}
 
-									$src_payment_method_image = wp_get_attachment_image_src(
-										$payment_method_image_id,
-										array(
-											$payment_method_image_width,
-											$payment_method_image_height,
-										)
-									);
-
+								foreach ( $all_payment_systems as $image_src => $payment_name ) {
 									?>
-
 									<div class="flex justify-center overflow-hidden w-8 h-6 bg-white-light py-1 rounded-md">
 										<img
 											class="w-auto h-full object-cover object-center"
-											src="<?php echo esc_url( $src_payment_method_image[0] ); ?>"
-											alt="<?php echo esc_attr( $payment_method->name ); ?>"
-											width="<?php echo esc_attr( $payment_method_image_width ); ?>"
-											height="<?php echo esc_attr( $payment_method_image_height ); ?>"
+											src="<?php echo esc_url( $image_src ); ?>"
+											alt="<?php echo esc_attr( $payment_name ); ?>"
+											width="<?php echo esc_attr( $payment_system_image_width ); ?>"
+											height="<?php echo esc_attr( $payment_system_image_height ); ?>"
 										>
 									</div>
-
 								<?php } ?>
 							</div>
 						<?php } ?>
