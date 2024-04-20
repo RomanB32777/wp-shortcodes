@@ -28,7 +28,7 @@ $bonus_title            = get_post_meta( get_the_ID(), 'organization_bonus_title
 $post_thumbnail_url     = get_the_post_thumbnail_url();
 $mobile_image_id        = esc_html( get_post_meta( get_the_ID(), 'organization_mobile_image', true ) );
 $mobile_image_width     = 300;
-$mobile_image_height    = 200;
+$mobile_image_height    = 208;
 $src_mobile_image       = wp_get_attachment_image_src(
 	$mobile_image_id,
 	array( $mobile_image_width, $mobile_image_height )
@@ -69,7 +69,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 <div class="h-full border main-border border-primary p-4 md:!p-7">
 	<div class="flex flex-col gap-y-3 justify-between md:!flex-row">
 		<div class="relative">
-			<div class="relative aspect-h-1 aspect-w-1 overflow-hidden bg-gray-200 w-full h-48 md:!w-48 lg:aspect-none">
+			<div class="relative aspect-h-1 aspect-w-1 overflow-hidden bg-gray-200 w-full h-52 md:!w-48 md:!h-48 lg:aspect-none">
 				<a class="shortcode-link" href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
 					<?php if ( wp_get_attachment_image( get_post_thumbnail_id() ) ) { ?>
 						<img
@@ -83,8 +83,8 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 							class="h-full w-full object-cover object-top md:hidden"
 							src="<?php echo esc_url( $src_mobile_image ? $src_mobile_image[0] : $post_thumbnail_url ); ?>"
 							alt="<?php echo esc_attr( $post_title_attr ); ?>"
-							width="300"
-							height="200"
+							width="<?php echo esc_attr( $mobile_image_width ); ?>"
+							height="<?php echo esc_attr( $mobile_image_height ); ?>"
 						>
 					<?php } ?>
 
