@@ -20,7 +20,7 @@ $allowed_html           = array(
 	),
 	'p'      => array(),
 );
-$short_desc             = get_post_meta( get_the_ID(), 'organization_short_desc', true );
+$shortcode_content      = get_post_meta( get_the_ID(), 'organization_shortcode_content', true );
 $external_link          = esc_url( get_post_meta( get_the_ID(), 'organization_external_link', true ) );
 $button_title           = esc_html( get_post_meta( get_the_ID(), 'organization_button_title', true ) );
 $overall_rating         = esc_html( get_post_meta( get_the_ID(), 'organization_overall_rating', true ) );
@@ -262,7 +262,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 					</div>
 				</div>
 
-				<?php if ( $short_desc || $bonus_title ) { ?>
+				<?php if ( $shortcode_content || $bonus_title ) { ?>
 					<div class="flex-1 pt-3 md:pl-6 md:!pt-0">
 						<?php if ( $bonus_title ) { ?>
 							<div class="text-xl font-bold text-dark">
@@ -270,9 +270,9 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 							</div>
 						<?php } ?>
 
-						<?php if ( $short_desc ) { ?>
+						<?php if ( $shortcode_content ) { ?>
 							<div class="text-base text-grizzly mt-2">
-								<?php echo wp_kses( $short_desc, $allowed_html ); ?>
+								<?php echo wp_kses( $shortcode_content, $allowed_html ); ?>
 							</div>
 						<?php } ?>
 					</div>
