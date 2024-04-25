@@ -26,17 +26,17 @@ function render_shortcode_organization_cards( $query, $attributes = array() ) {
 		$item_classes       = array();
 
 		if ( 1 === $columns ) {
-			array_push( $item_classes, 'w-full' );
+			$item_classes[] = 'w-full';
 		} elseif ( 2 === $columns ) {
-			array_push( $item_classes, 'w-[calc(100%/2-1.25rem)]' );
+			$item_classes[] = 'w-[calc(100%/2-1.25rem)]';
 		} elseif ( 3 === $columns ) {
-			array_push( $item_classes, 'w-[calc(100%/3-1.25rem)]' );
+			$item_classes[] = 'w-[calc(100%/3-1.25rem)]';
 		} else {
-			array_push( $item_classes, 'w-1/4' );
+			$item_classes[] = 'w-1/4';
 		}
 
 		if ( boolval( $is_enable_slider ) ) {
-			array_push( $item_classes, 'swiper-slide !h-auto' );
+			$item_classes[] = 'swiper-slide !h-auto';
 		}
 
 		$item_classnames   = implode( ' ', $item_classes );
