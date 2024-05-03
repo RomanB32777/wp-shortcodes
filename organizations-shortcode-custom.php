@@ -162,7 +162,7 @@ function organizations_shortcode_custom( $atts ) {
 			<div class="<?php echo esc_attr( $shortcode_wrap_classes_names ); ?>">
 				<div
 					<?php if ( $is_enable_slider ) { ?>
-						class='swiper-shortcode-slider'
+						class='swiper-slider'
 						id='swiper-shortcode-<?php echo esc_attr( $block_id ); ?>'
 						data-slider-loop="<?php echo esc_attr( boolval( $is_loop_slider ) ? 'true' : 'false' ); ?>"
 						data-slider-disable-autoplay="<?php echo esc_attr( boolval( $is_disable_autoplay ) ? 'true' : 'false' ); ?>"
@@ -173,6 +173,7 @@ function organizations_shortcode_custom( $atts ) {
 						data-slides-space-between-xs="<?php echo esc_attr( $slider_mobile_space_between ); ?>"
 						data-slides-space-between-sm="<?php echo esc_attr( $slider_tablet_space_between ); ?>"
 						data-slides-space-between-md="<?php echo esc_attr( $slider_laptop_space_between ); ?>"
+						data-slider-destroy-breakpoint="lg"
 					<?php } ?>
 				>
 					<?php
@@ -232,6 +233,8 @@ function organizations_shortcode_custom( $atts ) {
 								data-more-text="<?php echo esc_attr( $more_text ); ?>"
 								data-less-text="<?php echo esc_attr( $less_text ); ?>"
 								alt='<?php echo esc_attr( $more_text ); ?>'
+								width="80"
+								height="40"
 							/>
 						</div>
 					<?php } ?>
@@ -245,4 +248,4 @@ function organizations_shortcode_custom( $atts ) {
 	}
 }
 
-		add_action( 'init', 'organizations_shortcode_custom' );
+add_action( 'init', 'organizations_shortcode_custom' );

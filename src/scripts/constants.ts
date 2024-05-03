@@ -1,4 +1,4 @@
-type TBreakpoints = "xs" | "sm" | "md" | "lg" | "xl";
+export type TBreakpoints = "xs" | "sm" | "md" | "lg" | "xl";
 
 export const baseBreakpoints: Record<TBreakpoints, number> = {
 	xs: 320,

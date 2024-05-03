@@ -46,7 +46,7 @@ function style_shortcodes() {
 		enqueue_shortcodes_versioned_style( 'wp_custom_shortcodes_style', 'dist/css/main.css' );
 	}
 }
-add_action( 'wp_enqueue_scripts', 'style_shortcodes' );
+add_action( 'wp_enqueue_scripts', 'style_shortcodes', 999 );
 
 /**  Connecting style files for the plugin - End  */
 
@@ -54,11 +54,15 @@ add_action( 'wp_enqueue_scripts', 'style_shortcodes' );
 function script_shortcodes() {
 	wp_enqueue_script( 'jquery' );
 
-	enqueue_shortcodes_versioned_script( 'shortcodes-swiper', 'dist/js/swiper.js' );
-	enqueue_shortcodes_versioned_script( 'wp_custom_shortcodes_script', 'dist/js/main.js', array( 'jquery', 'shortcodes-swiper' ) );
+	if ( ! wp_script_is( 'theme-swiper-script', 'enqueued' ) ) {
+		enqueue_shortcodes_versioned_script( 'shortcodes-swiper-script', 'dist/js/swiper.js' );
+		enqueue_shortcodes_versioned_script( 'shortcodes-sliders', 'dist/js/sliders.js', array( 'shortcodes-swiper-script' ) );
+	}
+
+	enqueue_shortcodes_versioned_script( 'wp_custom_shortcodes_script', 'dist/js/main.js', array( 'jquery' ) );
 	wp_localize_script( 'wp_custom_shortcodes_script', 'ajax_data', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 }
-add_action( 'wp_enqueue_scripts', 'script_shortcodes' );
+add_action( 'wp_enqueue_scripts', 'script_shortcodes', 999 );
 
 /**  Connecting js files for the plugin - End  */
 
