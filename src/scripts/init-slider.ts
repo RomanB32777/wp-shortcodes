@@ -5,9 +5,7 @@ import type { SwiperOptions } from "swiper/types/swiper-options";
 import { baseBreakpoints } from "./constants";
 
 export const initSwiperSlider = (containerName: string, options: SwiperOptions = {}) => {
-	const { breakpoints, pagination, ...swiperOptions } = options;
-
-	const paginationOptions = typeof pagination === "object" ? pagination : {};
+	const { breakpoints, ...swiperOptions } = options;
 
 	return new Swiper(containerName, {
 		modules: [Navigation, Pagination, Autoplay],
@@ -28,7 +26,6 @@ export const initSwiperSlider = (containerName: string, options: SwiperOptions =
 					</button>
 				`;
 			},
-			...paginationOptions,
 		},
 		navigation: {
 			nextEl: `.arrow-right-${containerName.replace(/[#.]/gm, "")}`,

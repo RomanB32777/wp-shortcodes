@@ -1,7 +1,12 @@
-export type TEntryPaths = "main";
+export interface IEntryPaths {
+	main: string;
+	sliders: string;
+}
+
+export type TEntryPathKeys = keyof IEntryPaths;
 
 export interface IBuildPaths {
-	entry: Record<TEntryPaths, string>;
+	entry: IEntryPaths;
 	output: string;
 	src: string;
 }

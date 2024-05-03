@@ -15,7 +15,7 @@ export function buildWebpack(options: IBuildOptions): Configuration {
 
 	const config: Configuration = {
 		mode: mode ?? "development",
-		entry: paths.entry,
+		entry: { ...paths.entry },
 		output: {
 			path: paths.output,
 			filename: "js/[name].js",

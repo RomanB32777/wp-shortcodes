@@ -16,6 +16,7 @@ export default (env: TEnvVariables) => {
 			output: path.resolve(__dirname, "dist"),
 			entry: {
 				main: path.resolve(srcPath, "index.ts"),
+				sliders: path.resolve(srcPath, "scripts", "init-sliders.ts"),
 			},
 			src: srcPath,
 		},
