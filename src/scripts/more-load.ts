@@ -18,6 +18,8 @@ jQuery(document).ready(function ($) {
 
 	moreButton.on("click", function () {
 		const itemsNumber = $(this).attr("data-items-number"),
+			postType = $(this).attr("data-post-type"),
+			metaKey = $(this).attr("data-meta-key"),
 			blockId = $(this).attr("data-block-id"),
 			orderBy = $(this).attr("data-order-by"),
 			order = $(this).attr("data-order"),
@@ -26,7 +28,7 @@ jQuery(document).ready(function ($) {
 			excludeId = $(this).attr("data-exclude-id"),
 			moreText = $(this).attr("data-more-text"),
 			lessText = $(this).attr("data-less-text"),
-			wrapperBlock = $(`#shortcode-organizations-${blockId}`);
+			wrapperBlock = $(`#shortcode-posts-${blockId}`);
 
 		if (!wrapperBlock) {
 			return;
@@ -56,8 +58,10 @@ jQuery(document).ready(function ($) {
 			url: ajax_data?.ajax_url,
 			dataType: "html",
 			data: {
-				action: "load_more_organizations",
+				action: "load_more_posts",
 				itemsNumber,
+				postType,
+				metaKey,
 				orderBy,
 				order,
 				excludeId,

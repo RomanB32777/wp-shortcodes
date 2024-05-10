@@ -66,6 +66,6 @@ add_action( 'wp_enqueue_scripts', 'script_shortcodes', 999 );
 
 /**  Connecting js files for the plugin - End  */
 
-require_once plugin_dir_path( __FILE__ ) . '/organizations-shortcode-custom.php';
+require_once plugin_dir_path( __FILE__ ) . '/posts-shortcode-custom.php';
 
 require_once plugin_dir_path( __FILE__ ) . '/functions/wp-ajax-actions.php';

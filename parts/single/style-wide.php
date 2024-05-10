@@ -2,7 +2,7 @@
 
 global $post;
 
-$allowed_html           = array(
+$allowed_html = array(
 	'a'      => array(
 		'href'   => true,
 		'title'  => true,
@@ -20,34 +20,39 @@ $allowed_html           = array(
 	),
 	'p'      => array(),
 );
-$shortcode_content      = get_post_meta( get_the_ID(), 'organization_shortcode_content', true );
-$external_link          = esc_url( get_post_meta( get_the_ID(), 'organization_external_link', true ) );
-$button_title           = esc_html( get_post_meta( get_the_ID(), 'organization_button_title', true ) );
-$overall_rating         = esc_html( get_post_meta( get_the_ID(), 'organization_overall_rating', true ) );
-$permalink_button_title = esc_html( get_post_meta( get_the_ID(), 'organization_permalink_button_title', true ) );
-$bonus_title            = get_post_meta( get_the_ID(), 'organization_bonus_title', true );
+
+$current_post_type      = $post->post_type;
+$shortcode_content      = get_post_meta( get_the_ID(), "{$current_post_type}_shortcode_content", true );
+$external_link          = esc_url( get_post_meta( get_the_ID(), "{$current_post_type}_external_link", true ) );
+$button_title           = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_button_title", true ) );
+$overall_rating         = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_overall_rating", true ) );
+$permalink_button_title = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_permalink_button_title", true ) );
+$bonus_title            = get_post_meta( get_the_ID(), "{$current_post_type}_bonus_title", true );
 $post_thumbnail_url     = get_the_post_thumbnail_url();
-$mobile_image_id        = esc_html( get_post_meta( get_the_ID(), 'organization_mobile_image', true ) );
-$apps                   = get_posts(
-	array(
-		'post_type'      => 'app',
-		'posts_per_page' => -1,
-		'orderby'        => 'post_title',
-		'order'          => 'ASC',
-		'post_parent'    => get_the_ID(),
+$mobile_image_id        = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_mobile_image", true ) );
 
-	)
-);
-$payment_methods = get_posts(
-	array(
-		'post_type'      => 'payment',
-		'posts_per_page' => -1,
-		'orderby'        => 'post_title',
-		'order'          => 'ASC',
-		'post_parent'    => get_the_ID(),
+if ( 'organization' === $current_post_type ) {
+	$apps = get_posts(
+		array(
+			'post_type'      => 'app',
+			'posts_per_page' => -1,
+			'orderby'        => 'post_title',
+			'order'          => 'ASC',
+			'post_parent'    => get_the_ID(),
 
-	)
-);
+		)
+	);
+	$payment_methods = get_posts(
+		array(
+			'post_type'      => 'payment',
+			'posts_per_page' => -1,
+			'orderby'        => 'post_title',
+			'order'          => 'ASC',
+			'post_parent'    => get_the_ID(),
+
+		)
+	);
+}
 
 $mobile_image_size = 44;
 $src_mobile_image  = wp_get_attachment_image_src(
@@ -59,18 +64,30 @@ $src_mobile_image  = wp_get_attachment_image_src(
 );
 
 if ( empty( $button_title ) ) {
-	if ( get_option( 'organizations_play_now_title' ) ) {
-		$button_title = esc_html( get_option( 'organizations_play_now_title' ) );
+	if ( 'organization' === $current_post_type ) {
+		if ( get_option( 'organizations_play_now_title' ) ) {
+			$button_title = esc_html( get_option( 'organizations_play_now_title' ) );
+		} else {
+			$button_title = esc_html__( 'Play Now', 'custom-shortcodes-plugin' );
+		}
+	} elseif ( get_option( "{$current_post_type}_button_title" ) ) {
+			$button_title = esc_html( get_option( "{$current_post_type}_button_title" ) );
 	} else {
-		$button_title = esc_html__( 'Play Now', 'custom-shortcodes-plugin' );
+		$button_title = esc_html__( 'Follow', 'custom-shortcodes-plugin' );
 	}
 }
 
 if ( empty( $permalink_button_title ) ) {
-	if ( get_option( 'organizations_read_review_title' ) ) {
-		$permalink_button_title = esc_html( get_option( 'organizations_read_review_title' ) );
+	if ( 'organization' === $current_post_type ) {
+		if ( get_option( 'organizations_read_review_title' ) ) {
+			$permalink_button_title = esc_html( get_option( 'organizations_read_review_title' ) );
+		} else {
+			$permalink_button_title = esc_html__( 'Read Review', 'custom-shortcodes-plugin' );
+		}
+	} elseif ( get_option( "{$current_post_type}_permalink_button_title" ) ) {
+		$permalink_button_title = esc_html( get_option( "{$current_post_type}_permalink_button_title" ) );
 	} else {
-		$permalink_button_title = esc_html__( 'Read Review', 'custom-shortcodes-plugin' );
+		$permalink_button_title = esc_html__( 'Read', 'custom-shortcodes-plugin' );
 	}
 }
 
@@ -80,8 +97,12 @@ if ( $external_link ) {
 	$external_link_url = get_the_permalink();
 }
 
-if ( get_option( 'custom_rating_stars_number' ) ) {
-	$rating_stars_number_value = get_option( 'custom_rating_stars_number' );
+if ( 'organization' === $current_post_type ) {
+	if ( get_option( 'custom_rating_stars_number' ) ) {
+		$rating_stars_number_value = get_option( 'custom_rating_stars_number' );
+	}
+} elseif ( get_option( "{$current_post_type}_rating_stars_number" ) ) {
+	$rating_stars_number_value = get_option( "{$current_post_type}_rating_stars_number" );
 } else {
 	$rating_stars_number_value = '5';
 }
@@ -154,14 +175,18 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 										custom_star_rating(
 											array(
 												'rating' => $overall_rating,
+												'rating_stars_number' => $rating_stars_number_value,
 												'wrapper_classes' => 'justify-center flex-wrap gap-x-1',
 												'star_classes' => 'w-5 h-5',
 											)
 										);
 									?>
-									<span class="text-xl text-dark font-medium">
-										<?php echo esc_html( number_format( round( $overall_rating, 1 ), 1, '.', ',' ) ); ?>
-									</span>
+
+									<?php if ( $overall_rating ) { ?>
+										<span class="text-xl text-dark font-medium">
+											<?php echo esc_html( number_format( round( $overall_rating, 1 ), 1, '.', ',' ) ); ?>
+										</span>
+									<?php } ?>
 								</div>
 							<?php } ?>
 
@@ -169,21 +194,25 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 					</div>
 
 					<div class="flex items-center gap-4">
-						<?php if ( count( $apps ) ) { ?>
+						<?php if ( 'organization' === $current_post_type && count( $apps ) ) { ?>
 							<div class="flex items-center gap-3 p-2 bg-white-light rounded-2xl">
 								<?php
 								$app_platform_image_size = 16;
-
-								$all_app_platforms = array();
 
 								foreach ( $apps as $app ) {
 
 									$app_platforms = wp_get_post_terms( $app->ID, 'app-platform' );
 
-									foreach ( $app_platforms as $app_platform ) {
-										$app_platform_image_id = get_term_meta( $app_platform->term_id, 'taxonomy-image-id', true );
+									?>
 
-										if ( empty( $app_platform_image_id ) ) {
+									<?php
+
+									foreach ( $app_platforms as $app_platform ) {
+										$app_platform_id       = $app_platform->term_id;
+										$app_platform_image_id = get_term_meta( $app_platform_id, 'taxonomy-image-id', true );
+										$app_platform_link     = get_post_meta( $app->ID, "app_platform_link_{$app_platform->term_id}", true );
+
+										if ( empty( $app_platform_link ) || empty( $app_platform_image_id ) ) {
 											continue;
 										}
 
@@ -195,26 +224,32 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 											)
 										);
 
-										$all_app_platforms[ $src_app_platform_image[0] ] = $app_platform->name;
-									}
-								}
+										?>
 
-								foreach ( $all_app_platforms as $image_src => $app_platform_name ) {
-									?>
-									<div class="flex justify-center overflow-hidden h-5 w-5">
-											<img
-												class="w-auto h-full object-cover object-center"
-												src="<?php echo esc_url( $image_src ); ?>"
-												alt="<?php echo esc_attr( $app_platform_name ); ?>"
-												width="<?php echo esc_attr( $app_platform_image_size ); ?>"
-												height="<?php echo esc_attr( $app_platform_image_size ); ?>"
-											>
-										</div>
+										<a
+											href="<?php echo esc_url( $app_platform_link ); ?>"
+											title="<?php echo esc_attr( get_the_title( $app->ID ) ); ?>"
+											rel="nofollow"
+											target="_blank"
+										>
+											<div class="flex justify-center overflow-hidden h-5 w-5">
+												<img
+													class="w-auto h-full object-cover object-center"
+													src="<?php echo esc_url( $src_app_platform_image[0] ); ?>"
+													alt="<?php echo esc_attr( $app_platform->name ); ?>"
+													width="<?php echo esc_attr( $app_platform_image_size ); ?>"
+													height="<?php echo esc_attr( $app_platform_image_size ); ?>"
+												>
+											</div>
+										</a>
+
+										<?php } ?>
+									</a>
 								<?php } ?>
 							</div>
 						<?php } ?>
 
-						<?php if ( count( $payment_methods ) ) { ?>
+						<?php if ( 'organization' === $current_post_type && count( $payment_methods ) ) { ?>
 							<div class="flex items-center gap-3">
 								<?php
 								$payment_system_image_width  = 25;

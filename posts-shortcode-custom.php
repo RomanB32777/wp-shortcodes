@@ -1,6 +1,6 @@
 <?php
 
-function render_shortcode_organization_cards( $query, $attributes = array() ) {
+function render_shortcode_post_cards( $query, $attributes = array() ) {
 	$defaults = array(
 		'columns'             => 1,
 		'is_enable_slider'    => '1',
@@ -53,7 +53,7 @@ function render_shortcode_organization_cards( $query, $attributes = array() ) {
 		?>
 
 		<div
-			class="organization-item duration-200 border-4 bg-white rounded-xl md:!rounded-3xl <?php echo esc_attr( $item_classnames ); ?>"
+			class="post-item duration-200 border-4 bg-white rounded-xl md:!rounded-3xl <?php echo esc_attr( $item_classnames ); ?>"
 			style="border-color: <?php echo esc_attr( $item_border_color ); ?>;"
 		>
 
@@ -67,14 +67,16 @@ function render_shortcode_organization_cards( $query, $attributes = array() ) {
 	wp_reset_postdata();
 }
 
-add_shortcode( 'organizations-shortcode-custom', 'organizations_shortcode_custom' );
-function organizations_shortcode_custom( $atts ) {
+add_shortcode( 'posts-shortcode-custom', 'posts_shortcode_custom' );
+function posts_shortcode_custom( $atts ) {
 
 	ob_start();
 
 	$attributes = shortcode_atts(
 		array(
 			'items_number'                  => 9,
+			'post_type'                     => 'organization',
+			'meta_key'                      => 'organization_overall_rating',
 			'exclude_id'                    => '',
 			'extract_id'                    => '',
 			'pick_id'                       => '',
@@ -102,6 +104,8 @@ function organizations_shortcode_custom( $atts ) {
 
 	$block_id                      = uniqid();
 	$items_number                  = intval( $attributes['items_number'] );
+	$post_type                     = $attributes['post_type'];
+	$meta_key                      = $attributes['meta_key'];
 	$exclude_id                    = $attributes['exclude_id'];
 	$extract_id                    = $attributes['extract_id'];
 	$columns                       = intval( $attributes['columns'] );
@@ -144,22 +148,22 @@ function organizations_shortcode_custom( $atts ) {
 
 	$args = array(
 		'posts_per_page'      => $items_number,
-		'post_type'           => 'organization',
+		'post_type'           => $post_type,
 		'post__not_in'        => $exclude_id_array,
 		'post__in'            => $extract_id_array,
 		'no_found_rows'       => true,
 		'post_status'         => 'publish',
-		'meta_key'            => 'organization_overall_rating',
+		'meta_key'            => $meta_key,
 		'orderby'             => array( $order_by => $order ),
 		'ignore_sticky_posts' => 1,
 	);
 
-	$organizations_query = new WP_Query( $args );
+	$posts_query = new WP_Query( $args );
 
-	if ( $organizations_query->have_posts() ) {
+	if ( $posts_query->have_posts() ) {
 		?>
 
-		<div class="shortcode-organizations-wrapper relative font-inter" id="shortcode-organizations-<?php echo esc_attr( $block_id ); ?>">
+		<div class="shortcode-post-wrapper relative font-inter" id="shortcode-posts-<?php echo esc_attr( $block_id ); ?>">
 			<?php if ( $title ) { ?>
 				<h5 class="block-title mb-6 md:text-2xl">
 					<span><?php echo esc_html( $title ); ?></span>
@@ -196,7 +200,7 @@ function organizations_shortcode_custom( $atts ) {
 				>
 					<?php
 
-					$is_visible_more_btn = boolval( $is_with_pagination ) && $organizations_query->post_count >= $items_number;
+					$is_visible_more_btn = boolval( $is_with_pagination ) && $posts_query->post_count >= $items_number;
 
 					$cards_wrap_classes = array(
 						'shortcode-cards',
@@ -211,8 +215,8 @@ function organizations_shortcode_custom( $atts ) {
 					<div class="<?php echo esc_attr( $cards_wrap_classes_names ); ?>">
 
 						<?php
-						render_shortcode_organization_cards(
-							$organizations_query,
+						render_shortcode_post_cards(
+							$posts_query,
 							array(
 								'columns'             => $columns,
 								'is_enable_slider'    => $is_enable_slider,
@@ -241,6 +245,8 @@ function organizations_shortcode_custom( $atts ) {
 							<button
 								class="more-btn w-80 py-5 bg-grizzly-light text-dark font-bold text-xl rounded-xl"
 								data-items-number="<?php echo esc_attr( $items_number ); ?>"
+								data-post-type="<?php echo esc_attr( $post_type ); ?>"
+								data-meta-key="<?php echo esc_attr( $meta_key ); ?>"
 								data-columns-number="<?php echo esc_attr( $columns ); ?>"
 								data-order-by="<?php echo esc_attr( $order_by ); ?>"
 								data-order="<?php echo esc_attr( $order ); ?>"
@@ -267,4 +273,4 @@ function organizations_shortcode_custom( $atts ) {
 	}
 }
 
-add_action( 'init', 'organizations_shortcode_custom' );
+add_action( 'init', 'posts_shortcode_custom' );
