@@ -3,21 +3,20 @@
 jQuery(document).ready(function ($) {
 	"use strict";
 
-	const isLastPage = () => {
-		return $("#is-all-pages").length;
-	};
-
 	const moreButton = $(".load-more");
 
-	const handleButtonActiveStatus = () => {
-		moreButton.toggleClass("opacity-75");
-		moreButton.toggleClass("pointer-events-none");
+	const handleButtonActiveStatus = (currentButton: {
+		toggleClass: (className: string) => void;
+	}) => {
+		currentButton.toggleClass("opacity-75");
+		currentButton.toggleClass("pointer-events-none");
 	};
 
-	let paged = 1;
-
 	moreButton.on("click", function () {
-		const itemsNumber = $(this).attr("data-items-number"),
+		const currentButton = $(this),
+			itemsNumber = $(this).attr("data-items-number"),
+			postType = $(this).attr("data-post-type"),
+			metaKey = $(this).attr("data-meta-key"),
 			blockId = $(this).attr("data-block-id"),
 			orderBy = $(this).attr("data-order-by"),
 			order = $(this).attr("data-order"),
@@ -27,11 +26,17 @@ jQuery(document).ready(function ($) {
 			excludeId = $(this).attr("data-exclude-id"),
 			moreText = $(this).attr("data-more-text"),
 			lessText = $(this).attr("data-less-text"),
-			wrapperBlock = $(`#shortcode-organizations-${blockId}`);
+			wrapperBlock = $(`#shortcode-posts-${blockId}`);
+
+		let paged = Number($(this).attr("data-paged")) || 1;
 
 		if (!wrapperBlock) {
 			return;
 		}
+
+		const isLastPage = () => {
+			return wrapperBlock.find("#is-all-pages").length;
+		};
 
 		const cardList = wrapperBlock.find(".shortcode-cards"),
 			btnWrapper = wrapperBlock.find(".more-btn"),
@@ -60,8 +65,10 @@ jQuery(document).ready(function ($) {
 			url: ajax_data?.ajax_url,
 			dataType: "html",
 			data: {
-				action: "load_more_organizations",
+				action: "load_more_posts",
 				itemsNumber,
+				postType,
+				metaKey,
 				orderBy,
 				order,
 				excludeId,
@@ -71,19 +78,20 @@ jQuery(document).ready(function ($) {
 				paged: ++paged,
 			},
 			beforeSend() {
-				handleButtonActiveStatus();
+				handleButtonActiveStatus(currentButton);
 			},
 			success(res: string) {
 				cardList?.append(res);
+				currentButton.attr("data-paged", paged);
 
 				if (isLastPage()) {
-					moreButton.toggleClass("rotate-180");
-					moreButton.attr("alt", lessText);
+					currentButton.toggleClass("rotate-180");
+					currentButton.attr("alt", lessText);
 					label.text(lessText);
 				}
 			},
 			complete() {
-				handleButtonActiveStatus();
+				handleButtonActiveStatus(currentButton);
 			},
 		});
 	});

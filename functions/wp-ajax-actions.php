@@ -1,7 +1,9 @@
 <?php
 
-function ajax_load_more_organizations() {
+function ajax_load_more_posts() {
 	$items_number     = 9;
+	$post_type        = 'organization';
+	$meta_key         = 'organization_overall_rating';
 	$paged            = 1;
 	$order_by         = '';
 	$order            = '';
@@ -14,6 +16,12 @@ function ajax_load_more_organizations() {
 
 	if ( isset( $query_params['itemsNumber'] ) ) {
 		$items_number = (int) $query_params['itemsNumber'];
+	}
+	if ( isset( $query_params['postType'] ) && is_string( $query_params['postType'] ) ) {
+		$post_type = trim( $query_params['postType'] );
+	}
+	if ( isset( $query_params['metaKey'] ) && is_string( $query_params['metaKey'] ) ) {
+		$meta_key = trim( $query_params['metaKey'] );
 	}
 	if ( isset( $query_params['paged'] ) ) {
 		$paged = (int) $query_params['paged'];
@@ -40,10 +48,10 @@ function ajax_load_more_organizations() {
 	$args = array(
 		'posts_per_page' => $items_number,
 		'paged'          => $paged,
-		'post_type'      => 'organization',
+		'post_type'      => $post_type,
 		'post__not_in'   => $exclude_id_array,
 		'post_status'    => 'publish',
-		'meta_key'       => 'organization_overall_rating',
+		'meta_key'       => $meta_key,
 		'orderby'        => array(
 			$order_by => $order,
 			'title'   => $order,
@@ -52,7 +60,7 @@ function ajax_load_more_organizations() {
 
 	$query = new WP_Query( $args );
 
-	render_shortcode_organization_cards(
+	render_shortcode_post_cards(
 		$query,
 		array(
 			'columns'          => $columns_number,
@@ -69,5 +77,5 @@ function ajax_load_more_organizations() {
 	die;
 }
 
-add_action( 'wp_ajax_load_more_organizations', 'ajax_load_more_organizations' );
-add_action( 'wp_ajax_nopriv_load_more_organizations', 'ajax_load_more_organizations' );
+add_action( 'wp_ajax_load_more_posts', 'ajax_load_more_posts' );
+add_action( 'wp_ajax_nopriv_load_more_posts', 'ajax_load_more_posts' );

@@ -1,7 +1,7 @@
 <?php
 global $post;
 
-$allowed_html   = array(
+$allowed_html = array(
 	'a'      => array(
 		'href'   => true,
 		'title'  => true,
@@ -19,16 +19,24 @@ $allowed_html   = array(
 	),
 	'p'      => array(),
 );
-$external_link  = esc_url( get_post_meta( get_the_ID(), 'organization_external_link', true ) );
-$bonus_title    = get_post_meta( get_the_ID(), 'organization_bonus_title', true );
-$button_title   = esc_html( get_post_meta( get_the_ID(), 'organization_button_title', true ) );
-$overall_rating = esc_html( get_post_meta( get_the_ID(), 'organization_overall_rating', true ) );
+
+$current_post_type = $post->post_type;
+$external_link     = esc_url( get_post_meta( get_the_ID(), "{$current_post_type}_external_link", true ) );
+$bonus_title       = get_post_meta( get_the_ID(), "{$current_post_type}_bonus_title", true );
+$button_title      = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_button_title", true ) );
+$overall_rating    = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_overall_rating", true ) );
 
 if ( empty( $button_title ) ) {
-	if ( get_option( 'organizations_play_now_title' ) ) {
-		$button_title = esc_html( get_option( 'organizations_play_now_title' ) );
+	if ( 'organization' === $current_post_type ) {
+		if ( get_option( 'organizations_play_now_title' ) ) {
+			$button_title = esc_html( get_option( 'organizations_play_now_title' ) );
+		} else {
+			$button_title = esc_html__( 'Play Now', 'custom-shortcodes-plugin' );
+		}
+	} elseif ( get_option( "{$current_post_type}_button_title" ) ) {
+			$button_title = esc_html( get_option( "{$current_post_type}_button_title" ) );
 	} else {
-		$button_title = esc_html__( 'Play Now', 'custom-shortcodes-plugin' );
+		$button_title = esc_html__( 'Follow', 'custom-shortcodes-plugin' );
 	}
 }
 
@@ -38,8 +46,12 @@ if ( $external_link ) {
 	$external_link_url = get_the_permalink();
 }
 
-if ( get_option( 'custom_rating_stars_number' ) ) {
-	$rating_stars_number_value = get_option( 'custom_rating_stars_number' );
+if ( 'organization' === $current_post_type ) {
+	if ( get_option( 'custom_rating_stars_number' ) ) {
+		$rating_stars_number_value = get_option( 'custom_rating_stars_number' );
+	}
+} elseif ( get_option( "{$current_post_type}_rating_stars_number" ) ) {
+	$rating_stars_number_value = get_option( "{$current_post_type}_rating_stars_number" );
 } else {
 	$rating_stars_number_value = '5';
 }
@@ -68,7 +80,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 								custom_star_rating(
 									array(
 										'rating'          => $overall_rating,
-										'stars_number'    => $rating_stars_number_value,
+										'rating_stars_number' => $rating_stars_number_value,
 										'wrapper_classes' => 'justify-center flex-wrap',
 									)
 								);
