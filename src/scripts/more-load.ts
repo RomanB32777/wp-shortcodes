@@ -5,13 +5,6 @@ jQuery(document).ready(function ($) {
 
 	const moreButton = $(".load-more");
 
-	const handleButtonActiveStatus = (currentButton: {
-		toggleClass: (className: string) => void;
-	}) => {
-		currentButton.toggleClass("opacity-75");
-		currentButton.toggleClass("pointer-events-none");
-	};
-
 	moreButton.on("click", function () {
 		const currentButton = $(this),
 			itemsNumber = $(this).attr("data-items-number"),
@@ -36,6 +29,11 @@ jQuery(document).ready(function ($) {
 
 		const isLastPage = () => {
 			return wrapperBlock.find("#is-all-pages").length;
+		};
+
+		const handleButtonActiveStatus = () => {
+			currentButton.toggleClass("opacity-75");
+			currentButton.toggleClass("pointer-events-none");
 		};
 
 		const cardList = wrapperBlock.find(".shortcode-cards"),
@@ -78,7 +76,7 @@ jQuery(document).ready(function ($) {
 				paged: ++paged,
 			},
 			beforeSend() {
-				handleButtonActiveStatus(currentButton);
+				handleButtonActiveStatus();
 			},
 			success(res: string) {
 				cardList?.append(res);
@@ -91,7 +89,7 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			complete() {
-				handleButtonActiveStatus(currentButton);
+				handleButtonActiveStatus();
 			},
 		});
 	});
