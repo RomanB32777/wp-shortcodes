@@ -48,10 +48,7 @@ function ajax_load_more_posts() {
 		'post__not_in'   => $exclude_id_array,
 		'post_status'    => 'publish',
 		'meta_key'       => $meta_key,
-		'orderby'        => array(
-			$order_by => $order,
-			'title'   => $order,
-		),
+		'orderby'        => array( $order_by => $order ),
 	);
 
 	$query = new WP_Query( $args );

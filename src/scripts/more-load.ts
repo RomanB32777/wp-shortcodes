@@ -3,21 +3,11 @@
 jQuery(document).ready(function ($) {
 	"use strict";
 
-	const isLastPage = () => {
-		return $("#is-all-pages").length;
-	};
-
 	const moreButton = $(".more-btn");
 
-	const handleButtonActiveStatus = () => {
-		moreButton.toggleClass("opacity-75");
-		moreButton.toggleClass("pointer-events-none");
-	};
-
-	let paged = 1;
-
 	moreButton.on("click", function () {
-		const itemsNumber = $(this).attr("data-items-number"),
+		const currentButton = $(this),
+			itemsNumber = $(this).attr("data-items-number"),
 			postType = $(this).attr("data-post-type"),
 			metaKey = $(this).attr("data-meta-key"),
 			blockId = $(this).attr("data-block-id"),
@@ -30,12 +20,23 @@ jQuery(document).ready(function ($) {
 			lessText = $(this).attr("data-less-text"),
 			wrapperBlock = $(`#shortcode-posts-${blockId}`);
 
+		let paged = Number($(this).attr("data-paged")) || 1;
+
 		if (!wrapperBlock) {
 			return;
 		}
 
+		const isLastPage = () => {
+			return wrapperBlock.find("#is-all-pages").length;
+		};
+
+		const handleButtonActiveStatus = () => {
+			currentButton.toggleClass("opacity-75");
+			currentButton.toggleClass("pointer-events-none");
+		};
+
 		const cardList = wrapperBlock.find(".shortcode-cards"),
-			label = moreButton.find("span");
+			label = currentButton.find("span");
 
 		if (isLastPage()) {
 			label.text(moreText);
@@ -74,6 +75,7 @@ jQuery(document).ready(function ($) {
 			},
 			success(res: string) {
 				cardList?.append(res);
+				currentButton.attr("data-paged", paged);
 
 				if (isLastPage()) {
 					label.text(lessText);
