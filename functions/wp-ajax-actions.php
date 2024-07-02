@@ -8,6 +8,7 @@ function ajax_load_more_posts() {
 	$order_by         = '';
 	$order            = '';
 	$exclude_id_array = '';
+	$extract_id_array = '';
 	$columns_number   = 1;
 	$is_enable_slider = '1';
 	$card_style       = 'thin';
@@ -35,6 +36,9 @@ function ajax_load_more_posts() {
 	if ( isset( $query_params['excludeId'] ) && is_string( $query_params['excludeId'] ) ) {
 		$exclude_id_array = explode( ',', trim( $query_params['excludeId'] ) );
 	}
+	if ( isset( $query_params['extractId'] ) && is_string( $query_params['extractId'] ) ) {
+		$extract_id_array = explode( ',', trim( $query_params['extractId'] ) );
+	}
 	if ( isset( $query_params['columnsNumber'] ) ) {
 		$columns_number = (int) $query_params['columnsNumber'];
 	}
@@ -50,6 +54,7 @@ function ajax_load_more_posts() {
 		'paged'          => $paged,
 		'post_type'      => $post_type,
 		'post__not_in'   => $exclude_id_array,
+		'post__in'       => $extract_id_array,
 		'post_status'    => 'publish',
 		'meta_key'       => $meta_key,
 		'orderby'        => array( $order_by => $order ),

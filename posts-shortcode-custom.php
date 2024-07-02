@@ -233,6 +233,7 @@ function posts_shortcode_custom( $atts ) {
 								data-order-by="<?php echo esc_attr( $order_by ); ?>"
 								data-order="<?php echo esc_attr( $order ); ?>"
 								data-exclude-id="<?php echo esc_attr( $exclude_id ); ?>"
+								data-extract-id="<?php echo esc_attr( $extract_id ); ?>"
 								data-enable-slider="<?php echo esc_attr( $is_enable_slider ); ?>"
 								data-card-style="<?php echo esc_attr( $card_style ); ?>"
 								data-block-id="<?php echo esc_attr( $block_id ); ?>"

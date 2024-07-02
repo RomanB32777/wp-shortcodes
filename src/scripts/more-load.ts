@@ -17,6 +17,7 @@ jQuery(document).ready(function ($) {
 			isEnableSlider = $(this).attr("data-enable-slider"),
 			cardStyle = $(this).attr("data-card-style"),
 			excludeId = $(this).attr("data-exclude-id"),
+			extractId = $(this).attr("data-extract-id"),
 			moreText = $(this).attr("data-more-text"),
 			lessText = $(this).attr("data-less-text"),
 			wrapperBlock = $(`#shortcode-posts-${blockId}`);
@@ -70,6 +71,7 @@ jQuery(document).ready(function ($) {
 				orderBy,
 				order,
 				excludeId,
+				extractId,
 				columnsNumber,
 				isEnableSlider,
 				cardStyle,
