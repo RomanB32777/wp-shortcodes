@@ -4,7 +4,7 @@
 Plugin Name: Custom Shortcodes
 Plugin URI: https://test.com/
 Description: The plugin with custom shortcodes
-Version: 2.0.0
+Version: 2.0.1
 Author: Test.com
 Author URI: https://test.com/
 License: GNU General Public License v3 or later
