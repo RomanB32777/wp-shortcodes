@@ -7,17 +7,18 @@ jQuery(document).ready(function ($) {
 
 	moreButton.on("click", function () {
 		const currentButton = $(this),
-			itemsNumber = $(this).attr("data-items-number"),
-			postType = $(this).attr("data-post-type"),
-			metaKey = $(this).attr("data-meta-key"),
-			blockId = $(this).attr("data-block-id"),
-			orderBy = $(this).attr("data-order-by"),
-			order = $(this).attr("data-order"),
-			columnsNumber = $(this).attr("data-columns-number"),
-			isEnableSlider = $(this).attr("data-enable-slider"),
-			excludeId = $(this).attr("data-exclude-id"),
-			moreText = $(this).attr("data-more-text"),
-			lessText = $(this).attr("data-less-text"),
+			itemsNumber = $(this).attr("data-items-number") || undefined,
+			postType = $(this).attr("data-post-type") || undefined,
+			metaKey = $(this).attr("data-meta-key") || undefined,
+			blockId = $(this).attr("data-block-id") || undefined,
+			orderBy = $(this).attr("data-order-by") || undefined,
+			order = $(this).attr("data-order") || undefined,
+			columnsNumber = $(this).attr("data-columns-number") || undefined,
+			isEnableSlider = $(this).attr("data-enable-slider") || undefined,
+			excludeId = $(this).attr("data-exclude-id") || undefined,
+			extractId = $(this).attr("data-extract-id") || undefined,
+			moreText = $(this).attr("data-more-text") || undefined,
+			lessText = $(this).attr("data-less-text") || undefined,
 			wrapperBlock = $(`#shortcode-posts-${blockId}`);
 
 		let paged = Number($(this).attr("data-paged")) || 1;
@@ -66,6 +67,7 @@ jQuery(document).ready(function ($) {
 				orderBy,
 				order,
 				excludeId,
+				extractId,
 				columnsNumber,
 				isEnableSlider,
 				paged: ++paged,

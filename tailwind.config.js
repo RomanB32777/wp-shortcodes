@@ -1,5 +1,3 @@
-/** @type {import('tailwindcss').Config} */
-
 require("dotenv").config({ path: "./.env" });
 
 const {
@@ -23,8 +21,9 @@ const {
 
 const alternativeFonts = ["Arial", "sans-serif"];
 
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: ["./src/**/*.{php,js,ts,tsx}", "./parts/**/*.{php,js,ts,tsx}", "./*.php"],
+	content: ["./src/**/*.{js,ts,tsx}", "./parts/**/*.php", "./*.php"],
 	theme: {
 		extend: {
 			colors: {

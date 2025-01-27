@@ -154,9 +154,16 @@ function posts_shortcode_custom( $atts ) {
 		'no_found_rows'       => true,
 		'post_status'         => 'publish',
 		'meta_key'            => $meta_key,
-		'orderby'             => array( $order_by => $order ),
 		'ignore_sticky_posts' => 1,
 	);
+
+	if ( empty( $order_by ) && ! empty( $extract_id ) ) {
+		$order_by = 'post__in';
+
+		$args['orderby'] = $order_by;
+	} else {
+		$args['orderby'] = array( $order_by => $order );
+	}
 
 	$posts_query = new WP_Query( $args );
 
@@ -251,6 +258,7 @@ function posts_shortcode_custom( $atts ) {
 								data-order-by="<?php echo esc_attr( $order_by ); ?>"
 								data-order="<?php echo esc_attr( $order ); ?>"
 								data-exclude-id="<?php echo esc_attr( $exclude_id ); ?>"
+								data-extract-id="<?php echo esc_attr( $extract_id ); ?>"
 								data-enable-slider="<?php echo esc_attr( $is_enable_slider ); ?>"
 								data-block-id="<?php echo esc_attr( $block_id ); ?>"
 								data-more-text="<?php echo esc_attr( $more_text ); ?>"
