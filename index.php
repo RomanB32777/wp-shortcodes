@@ -70,4 +70,6 @@ require_once plugin_dir_path( __FILE__ ) . '/posts-shortcode-custom.php';
 
 require_once plugin_dir_path( __FILE__ ) . '/additions-shortcode-custom.php';
 
+require_once plugin_dir_path( __FILE__ ) . '/calculator-shortcode-custom.php';
+
 require_once plugin_dir_path( __FILE__ ) . '/functions/wp-ajax-actions.php';

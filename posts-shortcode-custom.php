@@ -207,7 +207,7 @@ function posts_shortcode_custom( $atts ) {
 				>
 					<?php
 
-					$is_visible_more_btn = boolval( $is_with_pagination ) && $posts_query->post_count >= $items_number;
+					$is_visible_more_btn = boolval( $is_with_pagination ) && $posts_query->post_count > $items_number;
 
 					$cards_wrap_classes = array(
 						'shortcode-cards',

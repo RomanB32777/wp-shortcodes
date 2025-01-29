@@ -1,0 +1,3 @@
+[submodule "parts/calculator"]
+	path = parts/calculator
+	url = git@github.com:RomanB32777/calculator-app.git
