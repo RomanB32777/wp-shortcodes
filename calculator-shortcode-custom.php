@@ -29,13 +29,19 @@ add_action( 'wp_enqueue_scripts', 'enqueue_calculator_shortcode_assets' );
 function calculator_customizer_settings( $wp_customize ) {
 	$calculator_background_color = ! empty( $_ENV['WHITE_COLOR'] ) ? $_ENV['WHITE_COLOR'] : '#fff';
 
-	$label_color            = ! empty( $_ENV['DARK_GRIZZLY_COLOR'] ) ? $_ENV['DARK_GRIZZLY_COLOR'] : '#2a2a2a';
+	$label_color                 = ! empty( $_ENV['DARK_GRIZZLY_COLOR'] ) ? $_ENV['DARK_GRIZZLY_COLOR'] : '#2a2a2a';
+	$label_icon_background_color = ! empty( $_ENV['GRIZZLY_LIGHT_COLOR'] ) ? $_ENV['GRIZZLY_LIGHT_COLOR'] : '#f9fafb';
+
 	$input_background_color = ! empty( $_ENV['GRIZZLY_LIGHT_COLOR'] ) ? $_ENV['GRIZZLY_LIGHT_COLOR'] : '#f9fafb';
 	$input_color            = ! empty( $_ENV['DARK_GRIZZLY_COLOR'] ) ? $_ENV['DARK_GRIZZLY_COLOR'] : '#2a2a2a';
 	$placeholder_color      = ! empty( $_ENV['GRIZZLY_COLOR'] ) ? $_ENV['GRIZZLY_COLOR'] : '#7e7e7e';
 
+	$error_background_color = '#fdf2f2';
+	$error_color            = '#c81e1e';
+
 	$submit_button_background_color = ! empty( $_ENV['PRIMARY_COLOR'] ) ? $_ENV['PRIMARY_COLOR'] : '#17946d';
 	$reset_button_background_color  = ! empty( $_ENV['SECONDARY_COLOR'] ) ? $_ENV['SECONDARY_COLOR'] : '#e14141';
+	$button_color                   = ! empty( $_ENV['BUTTONS_CONTENT_COLOR'] ) ? $_ENV['BUTTONS_CONTENT_COLOR'] : '#fff';
 
 	/*  --- Calculator Settings ---  */
 
@@ -89,6 +95,29 @@ function calculator_customizer_settings( $wp_customize ) {
 				'label'    => esc_html__( 'Label color', 'custom-theme' ),
 				'section'  => 'calculator_settings',
 				'settings' => 'calculator_label_color',
+			)
+		)
+	);
+
+	/*  --- Label icon background color ---  */
+
+	$wp_customize->add_setting(
+		'calculator_label_icon_background_color',
+		array(
+			'default'           => $label_icon_background_color,
+			'sanitize_callback' => 'sanitize_hex_color',
+			'capability'        => 'edit_theme_options',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'calculator_label_icon_background_color',
+			array(
+				'label'    => esc_html__( 'Label icon background color', 'custom-theme' ),
+				'section'  => 'calculator_settings',
+				'settings' => 'calculator_label_icon_background_color',
 			)
 		)
 	);
@@ -162,6 +191,52 @@ function calculator_customizer_settings( $wp_customize ) {
 		)
 	);
 
+	/*  --- Error background color ---  */
+
+	$wp_customize->add_setting(
+		'calculator_error_background_color',
+		array(
+			'default'           => $error_background_color,
+			'sanitize_callback' => 'sanitize_hex_color',
+			'capability'        => 'edit_theme_options',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'calculator_error_background_color',
+			array(
+				'label'    => esc_html__( 'Error background color', 'custom-theme' ),
+				'section'  => 'calculator_settings',
+				'settings' => 'calculator_error_background_color',
+			)
+		)
+	);
+
+	/*  --- Error color ---  */
+
+	$wp_customize->add_setting(
+		'calculator_error_color',
+		array(
+			'default'           => $error_color,
+			'sanitize_callback' => 'sanitize_hex_color',
+			'capability'        => 'edit_theme_options',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'calculator_error_color',
+			array(
+				'label'    => esc_html__( 'Error color', 'custom-theme' ),
+				'section'  => 'calculator_settings',
+				'settings' => 'calculator_error_color',
+			)
+		)
+	);
+
 	/*  --- Submit button background color ---  */
 
 	$wp_customize->add_setting(
@@ -207,6 +282,29 @@ function calculator_customizer_settings( $wp_customize ) {
 			)
 		)
 	);
+
+	/*  --- Button color ---  */
+
+	$wp_customize->add_setting(
+		'calculator_button_color',
+		array(
+			'default'           => $button_color,
+			'sanitize_callback' => 'sanitize_hex_color',
+			'capability'        => 'edit_theme_options',
+		)
+	);
+
+	$wp_customize->add_control(
+		new WP_Customize_Color_Control(
+			$wp_customize,
+			'calculator_button_color',
+			array(
+				'label'    => esc_html__( 'Button color', 'custom-theme' ),
+				'section'  => 'calculator_settings',
+				'settings' => 'calculator_button_color',
+			)
+		)
+	);
 }
 add_action( 'customize_register', 'calculator_customizer_settings' );
 
@@ -229,6 +327,12 @@ function calculator_customizer_style_settings() {
 		$label_color = get_theme_mod( 'calculator_label_color' );
 	}
 
+	if ( ! $label_icon_background_color = get_theme_mod( 'calculator_label_icon_background_color' ) ) {
+		$label_icon_background_color = '#f9fafb';
+	} else {
+		$label_icon_background_color = get_theme_mod( 'calculator_label_icon_background_color' );
+	}
+
 	if ( ! $input_background_color = get_theme_mod( 'calculator_input_background_color' ) ) {
 		$input_background_color = '#f9fafb';
 	} else {
@@ -247,6 +351,18 @@ function calculator_customizer_style_settings() {
 		$placeholder_color = get_theme_mod( 'calculator_placeholder_color' );
 	}
 
+	if ( ! $error_background_color = get_theme_mod( 'calculator_error_background_color' ) ) {
+		$error_background_color = '#fdf2f2';
+	} else {
+		$error_background_color = get_theme_mod( 'calculator_error_background_color' );
+	}
+
+	if ( ! $error_color = get_theme_mod( 'calculator_error_color' ) ) {
+		$error_color = '#c81e1e';
+	} else {
+		$error_color = get_theme_mod( 'calculator_error_color' );
+	}
+
 	if ( ! $submit_button_background_color = get_theme_mod( 'calculator_submit_button_background_color' ) ) {
 		$submit_button_background_color = '#5db24e';
 	} else {
@@ -259,6 +375,12 @@ function calculator_customizer_style_settings() {
 		$reset_button_background_color = get_theme_mod( 'calculator_reset_button_background_color' );
 	}
 
+	if ( ! $button_color = get_theme_mod( 'calculator_button_color' ) ) {
+		$button_color = '#fff';
+	} else {
+		$button_color = get_theme_mod( 'calculator_button_color' );
+	}
+
 	$custom_css = '
 		.calculator-app .calculator-form {
 			background-color: ' . esc_attr( $calculator_background_color ) . ';
@@ -269,9 +391,23 @@ function calculator_customizer_style_settings() {
 			color: ' . esc_attr( $label_color ) . ';
 		}
 
+		.calculator-app .calculator-form label .tooltip-icon {
+			background-color: ' . esc_attr( $label_icon_background_color ) . ';
+		}
+
 		.calculator-app .calculator-form input {
 			color: ' . esc_attr( $input_color ) . ';
 			background-color: ' . esc_attr( $input_background_color ) . ';
+		}
+
+		.calculator-app .calculator-form input.failure,
+		.calculator-app .calculator-form ul.errors-list li.failure {
+			color: ' . esc_attr( $error_color ) . ';
+			background-color: ' . esc_attr( $error_background_color ) . ';
+		}
+
+		.calculator-app .calculator-form label.failure {
+			color: ' . esc_attr( $error_color ) . ';
 		}
 
 		.calculator-app .calculator-form input::placeholder {
@@ -284,6 +420,10 @@ function calculator_customizer_style_settings() {
 
 		.calculator-app .reset-button {
 			background-color: ' . esc_attr( $reset_button_background_color ) . ';
+		}
+
+		.calculator-app button {
+			color: ' . esc_attr( $button_color ) . ';
 		}
 	';
 
