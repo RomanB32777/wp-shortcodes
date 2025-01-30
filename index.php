@@ -19,19 +19,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 function enqueue_shortcodes_versioned_style( $handle, $path = '', $deps = array(), $media = 'all' ) {
 	$style_url = plugin_dir_url( __FILE__ ) . $path;
+	$real_path = plugin_dir_path( __FILE__ ) . $path;
 
-	wp_register_style( $handle, $style_url, $deps, @filemtime( $style_url ), $media );
+	wp_register_style(
+		$handle,
+		$style_url,
+		$deps,
+		@filemtime( $real_path ),
+		$media
+	);
 	wp_enqueue_style( $handle );
 }
 
 function enqueue_shortcodes_versioned_script( $handle, $path = '', $depth = array() ) {
 	$main_path = plugin_dir_url( __FILE__ ) . $path;
+	$real_path = plugin_dir_path( __FILE__ ) . $path;
 
 	wp_register_script(
 		$handle,
 		$main_path,
 		$depth,
-		@filemtime( $main_path ),
+		@filemtime( $real_path ),
 		array(
 			'in_footer' => true,
 			'strategy'  => 'async',
