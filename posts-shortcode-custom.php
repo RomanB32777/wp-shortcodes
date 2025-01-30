@@ -42,12 +42,14 @@ function render_shortcode_post_cards( $query, $attributes = array() ) {
 		$item_classnames   = implode( ' ', $item_classes );
 		$item_border_color = 'transparent';
 
-		if ( 0 === $current_post_index && 1 === $current_page ) {
-			$item_border_color = $first_border_color;
-		} elseif ( 1 === $current_post_index && 1 === $current_page ) {
-			$item_border_color = $second_border_color;
-		} elseif ( 2 === $current_post_index && 1 === $current_page ) {
-			$item_border_color = $third_border_color;
+		if ( 1 === $current_page ) {
+			if ( 0 === $current_post_index ) {
+				$item_border_color = $first_border_color;
+			} elseif ( 1 === $current_post_index ) {
+				$item_border_color = $second_border_color;
+			} elseif ( 2 === $current_post_index ) {
+				$item_border_color = $third_border_color;
+			}
 		}
 
 		?>
@@ -151,7 +153,6 @@ function posts_shortcode_custom( $atts ) {
 		'post_type'           => $post_type,
 		'post__not_in'        => $exclude_id_array,
 		'post__in'            => $extract_id_array,
-		'no_found_rows'       => true,
 		'post_status'         => 'publish',
 		'meta_key'            => $meta_key,
 		'ignore_sticky_posts' => 1,
@@ -207,7 +208,7 @@ function posts_shortcode_custom( $atts ) {
 				>
 					<?php
 
-					$is_visible_more_btn = boolval( $is_with_pagination ) && $posts_query->post_count > $items_number;
+					$is_visible_more_btn = boolval( $is_with_pagination ) && $posts_query->post_count < $posts_query->found_posts;
 
 					$cards_wrap_classes = array(
 						'shortcode-cards',
