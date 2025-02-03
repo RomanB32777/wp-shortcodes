@@ -5,6 +5,7 @@ function ajax_load_more_posts() {
 	$post_type        = 'organization';
 	$meta_key         = 'organization_overall_rating';
 	$paged            = 1;
+	$page_id          = 0;
 	$order_by         = '';
 	$order            = '';
 	$exclude_id_array = '';
@@ -38,6 +39,9 @@ function ajax_load_more_posts() {
 	if ( isset( $query_params['extractId'] ) && is_string( $query_params['extractId'] ) ) {
 		$extract_id_array = explode( ',', trim( $query_params['extractId'] ) );
 	}
+	if ( isset( $query_params['pageId'] ) ) {
+		$page_id = (int) $query_params['pageId'];
+	}
 	if ( isset( $query_params['columnsNumber'] ) ) {
 		$columns_number = (int) $query_params['columnsNumber'];
 	}
@@ -69,6 +73,7 @@ function ajax_load_more_posts() {
 			'columns'          => $columns_number,
 			'is_enable_slider' => $is_enable_slider,
 			'current_page'     => $paged,
+			'page_id'          => $page_id,
 		)
 	);
 

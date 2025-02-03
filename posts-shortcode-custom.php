@@ -5,6 +5,7 @@ function render_shortcode_post_cards( $query, $attributes = array() ) {
 		'columns'             => 1,
 		'is_enable_slider'    => '1',
 		'current_page'        => 1,
+		'page_id'             => 0,
 		'first_border_color'  => '#a7e79c',
 		'second_border_color' => '#e5e79c',
 		'third_border_color'  => '#e7c09c',
@@ -15,6 +16,7 @@ function render_shortcode_post_cards( $query, $attributes = array() ) {
 	$columns             = $parsed_args['columns'];
 	$is_enable_slider    = $parsed_args['is_enable_slider'];
 	$current_page        = $parsed_args['current_page'];
+	$page_id             = $parsed_args['page_id'];
 	$first_border_color  = $parsed_args['first_border_color'];
 	$second_border_color = $parsed_args['second_border_color'];
 	$third_border_color  = $parsed_args['third_border_color'];
@@ -114,6 +116,7 @@ function posts_shortcode_custom( $atts ) {
 	$order                         = $attributes['order'];
 	$order_by                      = $attributes['order_by'];
 	$title                         = $attributes['title'];
+	$page_id                       = get_queried_object_id();
 	$is_with_pagination            = $attributes['is_with_pagination'];
 	$is_enable_slider              = boolval( $attributes['is_enable_slider'] );
 	$is_loop_slider                = $attributes['is_loop_slider'];
@@ -227,6 +230,7 @@ function posts_shortcode_custom( $atts ) {
 							$posts_query,
 							array(
 								'columns'             => $columns,
+								'page_id'             => $page_id,
 								'is_enable_slider'    => $is_enable_slider,
 								'first_border_color'  => $first_border_color,
 								'second_border_color' => $second_border_color,
@@ -262,6 +266,7 @@ function posts_shortcode_custom( $atts ) {
 								data-extract-id="<?php echo esc_attr( $extract_id ); ?>"
 								data-enable-slider="<?php echo esc_attr( $is_enable_slider ); ?>"
 								data-block-id="<?php echo esc_attr( $block_id ); ?>"
+								data-page-id="<?php echo esc_attr( $page_id ); ?>"
 								data-more-text="<?php echo esc_attr( $more_text ); ?>"
 								data-less-text="<?php echo esc_attr( $less_text ); ?>"
 							>

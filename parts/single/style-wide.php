@@ -30,6 +30,7 @@ $permalink_button_title = esc_html( get_post_meta( get_the_ID(), "{$current_post
 $bonus_title            = get_post_meta( get_the_ID(), "{$current_post_type}_bonus_title", true );
 $post_thumbnail_url     = get_the_post_thumbnail_url();
 $mobile_image_id        = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_mobile_image", true ) );
+$referral_links         = get_field( 'referral_links' );
 
 if ( 'organization' === $current_post_type ) {
 	$apps = get_posts(
@@ -91,10 +92,19 @@ if ( empty( $permalink_button_title ) ) {
 	}
 }
 
-if ( $external_link ) {
+$external_link_url     = get_the_permalink();
+$current_referral_link = '';
+
+if ( $referral_links ) {
+	$current_referral_link = current( array_filter( $referral_links, fn( $referral_link ) => $page_id === $referral_link['custom_page'] ) );
+
+	if ( $current_referral_link ) {
+		$external_link_url = $current_referral_link['referral_link'];
+	}
+}
+
+if ( ! $current_referral_link && $external_link ) {
 	$external_link_url = $external_link;
-} else {
-	$external_link_url = get_the_permalink();
 }
 
 if ( 'organization' === $current_post_type ) {
