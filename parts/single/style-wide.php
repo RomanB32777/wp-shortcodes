@@ -30,7 +30,11 @@ $permalink_button_title = esc_html( get_post_meta( get_the_ID(), "{$current_post
 $bonus_title            = get_post_meta( get_the_ID(), "{$current_post_type}_bonus_title", true );
 $post_thumbnail_url     = get_the_post_thumbnail_url();
 $mobile_image_id        = esc_html( get_post_meta( get_the_ID(), "{$current_post_type}_mobile_image", true ) );
-$referral_links         = get_field( 'referral_links' );
+$referral_links         = array();
+
+if ( function_exists( 'get_field' ) ) {
+	$referral_links = get_field( 'referral_links' );
+}
 
 if ( 'organization' === $current_post_type ) {
 	$apps = get_posts(
