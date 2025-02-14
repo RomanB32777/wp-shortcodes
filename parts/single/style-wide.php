@@ -97,10 +97,22 @@ if ( empty( $permalink_button_title ) ) {
 }
 
 $external_link_url     = get_the_permalink();
-$current_referral_link = '';
+$current_referral_link = array();
 
 if ( $referral_links ) {
-	$current_referral_link = current( array_filter( $referral_links, fn( $referral_link ) => $page_id === $referral_link['custom_page'] ) );
+	foreach ( $referral_links as $referral_link ) {
+		$curr_custom_page = $referral_link['custom_page'];
+
+		if ( is_array( $curr_custom_page ) ) {
+			$founded_id = array_filter( $curr_custom_page, fn( $item ) => $page_id === $item );
+
+			if ( $founded_id ) {
+				$current_referral_link = $referral_link;
+			}
+		} elseif ( $page_id === $curr_custom_page ) {
+			$current_referral_link = $referral_link;
+		}
+	}
 
 	if ( $current_referral_link ) {
 		$external_link_url = $current_referral_link['referral_link'];
@@ -165,11 +177,11 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 
 						</div>
 
-						<div class="flex flex-col gap-0.5 md:!gap-3">
+						<div class="flex flex-col gap-0.5 md:w-48 md:!gap-3">
 							<a
 								href="<?php the_permalink(); ?>"
 								title="<?php the_title_attribute(); ?>"
-								class="shortcode-link text-2xl font-bold no-underline duration-200 hover:text-secondary md:!text-3xl"
+								class="shortcode-link hyphens-none text-2xl font-bold no-underline duration-200 hover:text-secondary md:!text-3xl md:!hyphens-auto"
 							>
 								<?php get_the_title() ? the_title() : the_ID(); ?>
 							</a>
@@ -177,7 +189,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 							<?php if ( function_exists( 'custom_star_rating' ) ) { ?>
 								<?php
 									$rating_wrapper_classes = array(
-										'flex items-center gap-x-2',
+										'flex relative items-center gap-x-2',
 										( intval( $rating_stars_number_value ) > 5 ? 'w-3/4' : 'w-full' ),
 									);
 
@@ -312,7 +324,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 				</div>
 
 				<?php if ( $shortcode_content || $bonus_title ) { ?>
-					<div class="flex-1 pt-3 md:pl-6 md:!pt-0">
+					<div class="pt-3 md:pl-6 md:!pt-0">
 						<?php if ( $bonus_title ) { ?>
 							<div class="text-xl font-bold text-dark">
 								<?php echo wp_kses( $bonus_title, $allowed_html ); ?>
@@ -329,7 +341,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 			</div>
 		</div>
 
-		<div class="flex gap-3 md:w-[20%] md:flex-col md:justify-center">
+		<div class="flex gap-3 md:w-[20%] md:flex-col">
 			<a
 				href="<?php echo esc_url( $external_link_url ); ?>"
 				title="<?php echo esc_attr( $button_title ); ?>"
