@@ -2,24 +2,31 @@
 
 function render_shortcode_post_cards( $query, $attributes = array() ) {
 	$defaults = array(
-		'columns'             => 1,
-		'is_enable_slider'    => '1',
-		'current_page'        => 1,
-		'page_id'             => 0,
-		'first_border_color'  => '#a7e79c',
-		'second_border_color' => '#e5e79c',
-		'third_border_color'  => '#e7c09c',
+		'columns'                   => 1,
+		'is_enable_slider'          => '1',
+		'current_page'              => 1,
+		'page_id'                   => 0,
+		'first_border_color'        => '#a7e79c',
+		'second_border_color'       => '#e5e79c',
+		'third_border_color'        => '#e7c09c',
+		'first_badge_content'       => '#1',
+		'first_badge_bg_color'      => '#5db24e',
+		'first_badge_content_color' => '#ffffff',
+
 	);
 
 	$parsed_args = wp_parse_args( $attributes, $defaults );
 
-	$columns             = $parsed_args['columns'];
-	$is_enable_slider    = $parsed_args['is_enable_slider'];
-	$current_page        = $parsed_args['current_page'];
-	$page_id             = $parsed_args['page_id'];
-	$first_border_color  = $parsed_args['first_border_color'];
-	$second_border_color = $parsed_args['second_border_color'];
-	$third_border_color  = $parsed_args['third_border_color'];
+	$columns                   = $parsed_args['columns'];
+	$is_enable_slider          = $parsed_args['is_enable_slider'];
+	$current_page              = $parsed_args['current_page'];
+	$page_id                   = $parsed_args['page_id'];
+	$first_border_color        = $parsed_args['first_border_color'];
+	$second_border_color       = $parsed_args['second_border_color'];
+	$third_border_color        = $parsed_args['third_border_color'];
+	$first_badge_content       = $parsed_args['first_badge_content'];
+	$first_badge_bg_color      = $parsed_args['first_badge_bg_color'];
+	$first_badge_content_color = $parsed_args['first_badge_content_color'];
 
 	while ( $query->have_posts() ) :
 		$query->the_post();
@@ -57,9 +64,23 @@ function render_shortcode_post_cards( $query, $attributes = array() ) {
 		?>
 
 		<div
-			class="post-item duration-200 border-4 bg-white rounded-xl md:!rounded-3xl <?php echo esc_attr( $item_classnames ); ?>"
+			class="post-item relative duration-200 border-4 bg-white rounded-xl md:!rounded-3xl <?php echo esc_attr( $item_classnames ); ?>"
 			style="border-color: <?php echo esc_attr( $item_border_color ); ?>;"
 		>
+
+			<?php if ( 1 === $current_page && 0 === $current_post_index && $first_badge_content ) { ?>
+
+				<div
+					class="absolute -top-3 -left-4 px-4 font-bold rounded-3xl"
+					style="
+						background-color: <?php echo esc_attr( $first_badge_bg_color ); ?>;
+						color: <?php echo esc_attr( $first_badge_content_color ); ?>;
+					"
+				>
+					<?php echo esc_html( $first_badge_content ); ?>
+				</div>
+
+			<?php } ?>
 
 			<?php include plugin_dir_path( __FILE__ ) . 'parts/single/style-wide.php'; ?>
 
@@ -102,6 +123,9 @@ function posts_shortcode_custom( $atts ) {
 			'first_border_color'            => '#a7e79c',
 			'second_border_color'           => '#e5e79c',
 			'third_border_color'            => '#e7c09c',
+			'first_badge_content'           => '#1',
+			'first_badge_bg_color'          => '#5db24e',
+			'first_badge_content_color'     => '#ffffff',
 		),
 		$atts,
 	);
@@ -131,6 +155,9 @@ function posts_shortcode_custom( $atts ) {
 	$first_border_color            = $attributes['first_border_color'];
 	$second_border_color           = $attributes['second_border_color'];
 	$third_border_color            = $attributes['third_border_color'];
+	$first_badge_content           = $attributes['first_badge_content'];
+	$first_badge_bg_color          = $attributes['first_badge_bg_color'];
+	$first_badge_content_color     = $attributes['first_badge_content_color'];
 
 	if ( 'rating' === $order_by ) {
 		$order_by = 'meta_value_num';
@@ -184,8 +211,7 @@ function posts_shortcode_custom( $atts ) {
 			<?php
 
 			$shortcode_wrap_classes = array(
-				'overflow-hidden',
-				$is_enable_slider ? 'pb-14' : '',
+				$is_enable_slider ? 'overflow-hidden pb-14' : '',
 			);
 
 			$shortcode_wrap_classes_names = esc_attr( implode( ' ', $shortcode_wrap_classes ) );
@@ -229,12 +255,15 @@ function posts_shortcode_custom( $atts ) {
 						render_shortcode_post_cards(
 							$posts_query,
 							array(
-								'columns'             => $columns,
-								'page_id'             => $page_id,
-								'is_enable_slider'    => $is_enable_slider,
-								'first_border_color'  => $first_border_color,
-								'second_border_color' => $second_border_color,
-								'third_border_color'  => $third_border_color,
+								'columns'              => $columns,
+								'page_id'              => $page_id,
+								'is_enable_slider'     => $is_enable_slider,
+								'first_border_color'   => $first_border_color,
+								'second_border_color'  => $second_border_color,
+								'third_border_color'   => $third_border_color,
+								'first_badge_content'  => $first_badge_content,
+								'first_badge_bg_color' => $first_badge_bg_color,
+								'first_badge_content_color' => $first_badge_content_color,
 							)
 						);
 						?>
