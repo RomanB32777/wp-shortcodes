@@ -325,82 +325,86 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 					</div>
 				</div>
 
-				<?php if ( $bonus_currency_value ) { ?>
-
-					<div class="pt-3 lg:pl-6 lg:!pt-0">
-						<div class="bg-grizzly-light min-w-max px-4 py-2 rounded-xl text-center">
-							<p class="mb-1 font-medium text-xl text-dark">
-								<?php esc_html_e( 'Bonus up to:', 'custom-theme' ); ?>
-							</p>
-
-							<p class="bonus-currency-value text-3xl font-bold text-yellow">
-								<?php echo esc_html( $bonus_currency_value ); ?>
-							</p>
-						</div>
-					</div>
-
-				<?php } ?>
-
-				<?php if ( $shortcode_content || $bonus_title || $promotional_code ) { ?>
+				<?php if ( $shortcode_content || $bonus_title || $bonus_currency_value || $promotional_code ) { ?>
 					<div class="flex flex-col gap-y-2 pt-3 lg:pl-6 lg:!pt-0">
+
+						<?php $is_exist_bonus_promo_blocks = $bonus_currency_value || $promotional_code; ?>
+
+						<?php if ( $is_exist_bonus_promo_blocks ) { ?>
+							<div class="flex flex-col gap-2 lg:!flex-row">
+								<?php if ( $bonus_currency_value ) { ?>
+									<div class="flex-1 bg-grizzly-light px-4 py-2 rounded-xl text-center">
+										<p class="mb-1 font-medium text-xl text-dark">
+											<?php esc_html_e( 'Bonus up to:', 'custom-theme' ); ?>
+										</p>
+
+										<p class="bonus-currency-value text-3xl font-bold text-yellow">
+											<?php echo esc_html( $bonus_currency_value ); ?>
+										</p>
+									</div>
+								<?php } ?>
+
+								<?php if ( $promotional_code ) { ?>
+									<div
+										class="copy-button flex-1 group duration-200 self-stretch bg-grizzly-light flex items-center justify-between gap-10 px-4 py-2 rounded-xl cursor-pointer"
+										data-copy-text="<?php echo esc_attr( $promotional_code ); ?>"
+									>
+										<div>
+											<p>
+												<?php esc_html_e( 'Promo Code', 'custom-theme' ); ?>
+											</p>
+
+											<span class="font-semibold text-xl text-dark lg:!text-2xl">
+												<?php echo esc_html( $promotional_code ); ?>
+											</span>
+										</div>
+
+										<div class="main-link flex-none text-lg font-medium uppercase relative">
+											<div class="flex items-center gap-2 duration-200 group-[.active]:!hidden">
+												<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+													<path
+														d="M5.83366 5.83334V2.50001C5.83366 2.27899 5.92146 2.06703 6.07774 1.91075C6.23402 1.75447 6.44598 1.66667 6.66699 1.66667H17.5003C17.7213 1.66667 17.9333 1.75447 18.0896 1.91075C18.2459 2.06703 18.3337 2.27899 18.3337 2.50001V13.3333C18.3337 13.5544 18.2459 13.7663 18.0896 13.9226C17.9333 14.0789 17.7213 14.1667 17.5003 14.1667H14.167V17.4942C14.167 17.9575 13.7928 18.3333 13.3278 18.3333H2.50616C2.39593 18.3334 2.28676 18.3118 2.18489 18.2697C2.08303 18.2276 1.99048 18.1657 1.91253 18.0878C1.83459 18.0099 1.77278 17.9173 1.73065 17.8154C1.68851 17.7136 1.66688 17.6044 1.66699 17.4942L1.66949 6.67251C1.66949 6.20917 2.04366 5.83334 2.50866 5.83334H5.83366ZM7.50033 5.83334H13.3278C13.7912 5.83334 14.167 6.20751 14.167 6.67251V12.5H16.667V3.33334H7.50033V5.83334ZM3.33616 7.50001L3.33366 16.6667H12.5003V7.50001H3.33616Z"
+														fill="currentColor"
+													/>
+												</svg>
+											</div>
+
+											<?php if ( $external_link ) { ?>
+												<a
+													href="<?php echo esc_url( $external_link ); ?>"
+													title="<?php echo esc_attr( $button_title ); ?>"
+													class="hidden no-underline items-center gap-2 duration-200 group-[.active]:flex"
+													rel="nofollow"
+													target="_blank"
+												>
+													<span>
+														<?php esc_html_e( 'visit site', 'custom-theme' ); ?>
+													</span>
+
+													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16" fill="none">
+														<path
+															d="M10 16L20 8L10 0V5C4.477 5 0 9.477 0 15C0 15.273 0.0100002 15.543 0.0319996 15.81C1.54 12.95 4.542 11 8 11H10V16Z"
+															fill="currentColor"
+														/>
+													</svg>
+												</a>
+											<?php } ?>
+										</div>
+									</div>
+								<?php } ?>
+							</div>
+						<?php } ?>
+
+
 						<?php if ( $bonus_title ) { ?>
 							<div class="text-xl font-bold text-dark">
 								<?php echo wp_kses( $bonus_title, $allowed_html ); ?>
 							</div>
 						<?php } ?>
 
-						<?php if ( $shortcode_content ) { ?>
+						<?php if ( ! $is_exist_bonus_promo_blocks && $shortcode_content ) { ?>
 							<div class="text-base text-grizzly">
 								<?php echo wp_kses( $shortcode_content, $allowed_html ); ?>
-							</div>
-						<?php } ?>
-
-						<?php if ( $promotional_code ) { ?>
-							<div
-								class="copy-button group duration-200 self-stretch bg-grizzly-light flex items-center justify-between gap-10 px-4 py-2 rounded-xl cursor-pointer md:w-fit"
-								data-copy-text="<?php echo esc_attr( $promotional_code ); ?>"
-							>
-								<div>
-									<p>
-										<?php esc_html_e( 'Promo Code', 'custom-theme' ); ?>
-									</p>
-
-									<span class="font-semibold text-xl text-dark lg:!text-2xl">
-										<?php echo esc_html( $promotional_code ); ?>
-									</span>
-								</div>
-
-								<div class="main-link flex-none text-lg font-medium uppercase relative">
-									<div class="flex items-center gap-2 duration-200 group-[.active]:!hidden">
-										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-											<path
-												d="M5.83366 5.83334V2.50001C5.83366 2.27899 5.92146 2.06703 6.07774 1.91075C6.23402 1.75447 6.44598 1.66667 6.66699 1.66667H17.5003C17.7213 1.66667 17.9333 1.75447 18.0896 1.91075C18.2459 2.06703 18.3337 2.27899 18.3337 2.50001V13.3333C18.3337 13.5544 18.2459 13.7663 18.0896 13.9226C17.9333 14.0789 17.7213 14.1667 17.5003 14.1667H14.167V17.4942C14.167 17.9575 13.7928 18.3333 13.3278 18.3333H2.50616C2.39593 18.3334 2.28676 18.3118 2.18489 18.2697C2.08303 18.2276 1.99048 18.1657 1.91253 18.0878C1.83459 18.0099 1.77278 17.9173 1.73065 17.8154C1.68851 17.7136 1.66688 17.6044 1.66699 17.4942L1.66949 6.67251C1.66949 6.20917 2.04366 5.83334 2.50866 5.83334H5.83366ZM7.50033 5.83334H13.3278C13.7912 5.83334 14.167 6.20751 14.167 6.67251V12.5H16.667V3.33334H7.50033V5.83334ZM3.33616 7.50001L3.33366 16.6667H12.5003V7.50001H3.33616Z"
-												fill="currentColor"
-											/>
-										</svg>
-									</div>
-
-									<?php if ( $external_link ) { ?>
-										<a
-											href="<?php echo esc_url( $external_link ); ?>"
-											title="<?php echo esc_attr( $button_title ); ?>"
-											class="hidden no-underline items-center gap-2 duration-200 group-[.active]:flex"
-											rel="nofollow"
-											target="_blank"
-										>
-											<span>
-												<?php esc_html_e( 'visit site', 'custom-theme' ); ?>
-											</span>
-
-											<svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16" fill="none">
-												<path
-													d="M10 16L20 8L10 0V5C4.477 5 0 9.477 0 15C0 15.273 0.0100002 15.543 0.0319996 15.81C1.54 12.95 4.542 11 8 11H10V16Z"
-													fill="currentColor"
-												/>
-											</svg>
-										</a>
-									<?php } ?>
-								</div>
 							</div>
 						<?php } ?>
 					</div>
