@@ -12,6 +12,9 @@ function render_shortcode_post_cards( $query, $attributes = array() ) {
 		'first_badge_content'       => '#1',
 		'first_badge_bg_color'      => '#5db24e',
 		'first_badge_content_color' => '#ffffff',
+		'bonus_label'               => '',
+		'promo_label'               => '',
+		'copy_promo_label'          => '',
 
 	);
 
@@ -27,6 +30,9 @@ function render_shortcode_post_cards( $query, $attributes = array() ) {
 	$first_badge_content       = $parsed_args['first_badge_content'];
 	$first_badge_bg_color      = $parsed_args['first_badge_bg_color'];
 	$first_badge_content_color = $parsed_args['first_badge_content_color'];
+	$bonus_label               = $parsed_args['bonus_label'];
+	$promo_label               = $parsed_args['promo_label'];
+	$copy_promo_label          = $parsed_args['copy_promo_label'];
 
 	while ( $query->have_posts() ) :
 		$query->the_post();
@@ -126,6 +132,9 @@ function posts_shortcode_custom( $atts ) {
 			'first_badge_content'           => '#1',
 			'first_badge_bg_color'          => '#5db24e',
 			'first_badge_content_color'     => '#ffffff',
+			'bonus_label'                   => esc_html__( 'Bonus up to', 'custom-theme' ),
+			'promo_label'                   => esc_html__( 'Promo Code', 'custom-theme' ),
+			'copy_promo_label'              => esc_html__( 'visit site', 'custom-theme' ),
 		),
 		$atts,
 	);
@@ -158,6 +167,9 @@ function posts_shortcode_custom( $atts ) {
 	$first_badge_content           = $attributes['first_badge_content'];
 	$first_badge_bg_color          = $attributes['first_badge_bg_color'];
 	$first_badge_content_color     = $attributes['first_badge_content_color'];
+	$bonus_label                   = $attributes['bonus_label'];
+	$promo_label                   = $attributes['promo_label'];
+	$copy_promo_label              = $attributes['copy_promo_label'];
 
 	if ( 'rating' === $order_by ) {
 		$order_by = 'meta_value_num';
@@ -264,6 +276,10 @@ function posts_shortcode_custom( $atts ) {
 								'first_badge_content'  => $first_badge_content,
 								'first_badge_bg_color' => $first_badge_bg_color,
 								'first_badge_content_color' => $first_badge_content_color,
+								'bonus_label'          => $bonus_label,
+								'promo_label'          => $promo_label,
+								'copy_promo_label'     => $copy_promo_label,
+
 							)
 						);
 						?>

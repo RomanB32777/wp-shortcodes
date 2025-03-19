@@ -49,6 +49,7 @@ if ( 'organization' === $current_post_type ) {
 
 		)
 	);
+
 	$payment_methods = get_posts(
 		array(
 			'post_type'      => 'payment',
@@ -144,7 +145,12 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 		<div class="flex gap-3 lg:!gap-6 lg:max-w-[75%]">
 			<div class="hidden flex-1 lg:!block">
 				<div class="relative aspect-h-1 aspect-w-1 overflow-hidden h-32 w-32 lg:aspect-none">
-					<a href="<?php the_permalink(); ?>" title="<?php the_title_attribute(); ?>">
+					<a
+						href="<?php echo esc_url( $external_link_url ); ?>"
+						title="<?php the_title_attribute(); ?>"
+						rel="nofollow"
+						target="_blank"
+					>
 						<?php if ( wp_get_attachment_image( get_post_thumbnail_id() ) ) { ?>
 							<img
 								class="h-full w-full rounded-xl object-cover object-center"
@@ -335,7 +341,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 								<?php if ( $bonus_currency_value ) { ?>
 									<div class="flex-1 bg-grizzly-light px-4 py-2 rounded-xl text-center">
 										<p class="mb-1 font-medium text-xl text-dark">
-											<?php esc_html_e( 'Bonus up to:', 'custom-theme' ); ?>
+											<?php echo esc_html( $bonus_label ); ?>
 										</p>
 
 										<p class="bonus-currency-value text-3xl font-bold text-yellow">
@@ -351,7 +357,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 									>
 										<div>
 											<p>
-												<?php esc_html_e( 'Promo Code', 'custom-theme' ); ?>
+												<?php echo esc_html( $promo_label ); ?>
 											</p>
 
 											<span class="font-semibold text-xl text-dark lg:!text-2xl">
@@ -378,7 +384,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 													target="_blank"
 												>
 													<span>
-														<?php esc_html_e( 'visit site', 'custom-theme' ); ?>
+														<?php echo esc_html( $copy_promo_label ); ?>
 													</span>
 
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16" fill="none">
