@@ -76,12 +76,12 @@ if ( empty( $button_title ) ) {
 		if ( get_option( 'organizations_play_now_title' ) ) {
 			$button_title = esc_html( get_option( 'organizations_play_now_title' ) );
 		} else {
-			$button_title = esc_html__( 'Play Now', 'custom-shortcodes-plugin' );
+			$button_title = esc_html__( 'Play Now', 'custom-theme' );
 		}
 	} elseif ( get_option( "{$current_post_type}_button_title" ) ) {
 			$button_title = esc_html( get_option( "{$current_post_type}_button_title" ) );
 	} else {
-		$button_title = esc_html__( 'Follow', 'custom-shortcodes-plugin' );
+		$button_title = esc_html__( 'Follow', 'custom-theme' );
 	}
 }
 
@@ -90,12 +90,12 @@ if ( empty( $permalink_button_title ) ) {
 		if ( get_option( 'organizations_read_review_title' ) ) {
 			$permalink_button_title = esc_html( get_option( 'organizations_read_review_title' ) );
 		} else {
-			$permalink_button_title = esc_html__( 'Read Review', 'custom-shortcodes-plugin' );
+			$permalink_button_title = esc_html__( 'Read Review', 'custom-theme' );
 		}
 	} elseif ( get_option( "{$current_post_type}_permalink_button_title" ) ) {
 		$permalink_button_title = esc_html( get_option( "{$current_post_type}_permalink_button_title" ) );
 	} else {
-		$permalink_button_title = esc_html__( 'Read', 'custom-shortcodes-plugin' );
+		$permalink_button_title = esc_html__( 'Read', 'custom-theme' );
 	}
 }
 
@@ -126,14 +126,14 @@ if ( ! $current_referral_link && $external_link ) {
 	$external_link_url = $external_link;
 }
 
+$rating_stars_number_value = '5';
+
 if ( 'organization' === $current_post_type ) {
 	if ( get_option( 'custom_rating_stars_number' ) ) {
 		$rating_stars_number_value = get_option( 'custom_rating_stars_number' );
 	}
 } elseif ( get_option( "{$current_post_type}_rating_stars_number" ) ) {
 	$rating_stars_number_value = get_option( "{$current_post_type}_rating_stars_number" );
-} else {
-	$rating_stars_number_value = '5';
 }
 
 $post_title_attr = the_title_attribute( 'echo=0' );
@@ -142,7 +142,7 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 
 <div class="h-full p-4 lg:!p-5">
 	<div class="flex flex-col gap-y-4 justify-between lg:!flex-row">
-		<div class="flex gap-3 lg:!gap-6 lg:max-w-[75%]">
+		<div class="flex gap-3 lg:!gap-6 w-full lg:max-w-[75%]">
 			<div class="hidden flex-1 lg:!block">
 				<div class="relative aspect-h-1 aspect-w-1 overflow-hidden h-32 w-32 lg:aspect-none">
 					<a
@@ -332,15 +332,15 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 				</div>
 
 				<?php if ( $shortcode_content || $bonus_title || $bonus_currency_value || $promotional_code ) { ?>
-					<div class="flex flex-col gap-y-2 pt-3 lg:pl-6 lg:!pt-0">
+					<div class="flex flex-col gap-y-2 pt-3 w-full lg:pl-6 lg:!pt-0">
 
 						<?php $is_exist_bonus_promo_blocks = $bonus_currency_value || $promotional_code; ?>
 
 						<?php if ( $is_exist_bonus_promo_blocks ) { ?>
 							<div class="flex flex-col gap-2 lg:!flex-row">
 								<?php if ( $bonus_currency_value ) { ?>
-									<div class="flex-1 bg-grizzly-light px-4 py-2 rounded-xl text-center">
-										<p class="mb-1 font-medium text-xl text-dark">
+									<div class="flex flex-1 justify-between items-center gap-1 bg-grizzly-light px-4 py-2 rounded-xl lg:flex-col">
+										<p class="font-medium text-xl text-dark">
 											<?php echo esc_html( $bonus_label ); ?>
 										</p>
 
@@ -355,12 +355,12 @@ $post_title_attr = the_title_attribute( 'echo=0' );
 										class="copy-button flex-1 group duration-200 self-stretch bg-grizzly-light flex items-center justify-between gap-10 px-4 py-2 rounded-xl cursor-pointer"
 										data-copy-text="<?php echo esc_attr( $promotional_code ); ?>"
 									>
-										<div>
-											<p>
+										<div class="text-dark">
+											<p class="text-lg">
 												<?php echo esc_html( $promo_label ); ?>
 											</p>
 
-											<span class="font-semibold text-xl text-dark lg:!text-2xl">
+											<span class="font-semibold text-xl lg:!text-2xl">
 												<?php echo esc_html( $promotional_code ); ?>
 											</span>
 										</div>

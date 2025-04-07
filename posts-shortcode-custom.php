@@ -135,6 +135,8 @@ function posts_shortcode_custom( $atts ) {
 			'bonus_label'                   => esc_html__( 'Bonus up to', 'custom-theme' ),
 			'promo_label'                   => esc_html__( 'Promo Code', 'custom-theme' ),
 			'copy_promo_label'              => esc_html__( 'visit site', 'custom-theme' ),
+			'show_more_label'               => esc_html__( 'Show more', 'custom-theme' ),
+			'show_less_label'               => esc_html__( 'Show less', 'custom-theme' ),
 		),
 		$atts,
 	);
@@ -170,6 +172,8 @@ function posts_shortcode_custom( $atts ) {
 	$bonus_label                   = $attributes['bonus_label'];
 	$promo_label                   = $attributes['promo_label'];
 	$copy_promo_label              = $attributes['copy_promo_label'];
+	$show_more_label               = $attributes['show_more_label'];
+	$show_less_label               = $attributes['show_less_label'];
 
 	if ( 'rating' === $order_by ) {
 		$order_by = 'meta_value_num';
@@ -293,12 +297,6 @@ function posts_shortcode_custom( $atts ) {
 					<?php } elseif ( $is_visible_more_btn ) { ?>
 
 						<div class="flex justify-center">
-							<?php
-
-								$more_text = __( 'Show more', 'custom-shortcodes-plugin' );
-								$less_text = __( 'Show less', 'custom-shortcodes-plugin' );
-
-							?>
 							<button
 								class="more-btn w-80 py-5 bg-grizzly-light text-dark font-bold text-xl rounded-xl"
 								data-items-number="<?php echo esc_attr( $items_number ); ?>"
@@ -312,11 +310,11 @@ function posts_shortcode_custom( $atts ) {
 								data-enable-slider="<?php echo esc_attr( $is_enable_slider ); ?>"
 								data-block-id="<?php echo esc_attr( $block_id ); ?>"
 								data-page-id="<?php echo esc_attr( $page_id ); ?>"
-								data-more-text="<?php echo esc_attr( $more_text ); ?>"
-								data-less-text="<?php echo esc_attr( $less_text ); ?>"
+								data-more-text="<?php echo esc_attr( $show_more_label ); ?>"
+								data-less-text="<?php echo esc_attr( $show_less_label ); ?>"
 							>
 								<span>
-									<?php echo esc_html( $more_text ); ?>
+									<?php echo esc_html( $show_more_label ); ?>
 								</span>
 							</button>
 						</div>
